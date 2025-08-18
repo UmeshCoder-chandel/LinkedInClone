@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { IoHome } from "react-icons/io5";
-import { MdPersonAdd } from "react-icons/md";
-import { MdOutlineWork } from "react-icons/md";
-import { IoNotifications } from "react-icons/io5";
-import { MdMessage } from "react-icons/md";
-import { useLocation } from "react-router-dom";
+import HomeIcon from '@mui/icons-material/Home';
+import GroupsIcon from '@mui/icons-material/Groups';
+import WorkIcon from '@mui/icons-material/Work';
+import MessageIcon from '@mui/icons-material/Message';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import { Link, useLocation } from "react-router-dom";
 const Navbar2=()=>{
     const [dropdown,setDropdown]=useState(false)
     const location=useLocation()
@@ -28,31 +28,33 @@ const Navbar2=()=>{
                     </div>
                 </div>
                 <div className="hidden gap-10 md:flex">
-                    <div className="flex flex-col items-center cursor-pointer">
-                            <IoHome  sx={{color:location.pathname==='/home'? "black":'gray'}} />
+                    <Link to={'/home'} className="flex flex-col items-center cursor-pointer">
+                            <HomeIcon sx={{color:location.pathname==='/home'? "black":'gray'}} />
                             <div className={`text-sm text-gray-500${location.pathname==='/home'? "border-b-3":''}`}>Home</div>
-                    </div>
-                    <div className="flex flex-col items-center cursor-pointer">
-                            <MdPersonAdd sx={{color:location.pathname==='/mynetwork'? "black":'gray'}} />
+                    </Link>
+                    <Link to={'/network'} className="flex flex-col items-center cursor-pointer">
+                            <GroupsIcon sx={{color:location.pathname==='/network'? "black":'gray'}} />
                             <div className={`text-sm text-gray-500${location.pathname==='/mynetwork'? "border-b-3":''}`}>My Network</div>
-                    </div>
-                    <div className="flex flex-col items-center cursor-pointer">
-                            <MdOutlineWork sx={{color:location.pathname==='/jobs'? "black":'gray'}} />
+                    </Link>
+                    <Link to={''} className="flex flex-col items-center cursor-pointer">
+                            <WorkIcon sx={{color:location.pathname==='/jobs'? "black":'gray'}} />
                             <div className={`text-sm text-gray-500${location.pathname==='/jobs'? "border-b-3":''}`}>Jobs</div>
-                    </div>
-                    <div className="flex flex-col items-center cursor-pointer">
-                            <MdMessage sx={{color:location.pathname==='/messages'? "black":'gray'}} />
+                    </Link>
+                    <Link to={'/messages'} className="flex flex-col items-center cursor-pointer">
+                            <MessageIcon sx={{color:location.pathname==='/messages'? "black":'gray'}} />
                             <div className={`text-sm text-gray-500${location.pathname==='/messages'? "border-b-3":''}`}>Messaging</div>
-                    </div>
-                    <div className="flex flex-col items-center cursor-pointer">
-                            <IoNotifications sx={{color:location.pathname==='/notifications'? "black":'gray'}} /><span className="p-1 rounded-full text-sm bg-red-700 text-white">1</span>
-
-                            <div className={`text-sm text-gray-500${location.pathname==='/notifications'? "border-b-3":''}`}>Notifications</div>
-                    </div>
-                    <div className="flex flex-col items-center cursor-pointer">
+                    </Link>
+                    <Link to="/notifications" className="relative flex flex-col items-center cursor-pointer">
+  <NotificationsIcon sx={{ color: location.pathname === '/notifications' ? 'black' : 'gray' }} />
+  <span className=" absolute top-1 right-2  rounded-full text-xs px-1.5 py-0.5 bg-red-700 text-white">1</span>
+  <div className={`text-sm text-gray-500 ${location.pathname === '/notifications' ? 'border-b-2 border-black' : ''}`}>
+    Notifications
+  </div>
+</Link>
+                    <Link to={'/profile'} className="flex flex-col items-center cursor-pointer">
                             <img className="w-8 h-8 rounded-full" src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQn9zilY2Yu2hc19pDZFxgWDTUDy5DId7ITqA&s"} alt="" />
                             <div className="text-sm text-gray-500">Me</div>
-                    </div>
+                    </Link>
 
                 </div>
             </div>

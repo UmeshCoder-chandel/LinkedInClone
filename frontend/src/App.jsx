@@ -8,6 +8,9 @@ import Navbar1 from './components/Navbar1'
 import LandingPage from './pages/landingPage'
 import Footer from './components/Footer'
 import Navbar2 from './components/Navbar2'
+import { Network } from './pages/Network'
+import { Notification } from './pages/Notification'
+import { Profile } from './pages/Profile'
 
 function App(){
   const islogin=true
@@ -20,6 +23,9 @@ function App(){
         <Route path="/home" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/messages" element={<Messages />} />
+        <Route path="/network" element={<Network />} />
+        <Route path="/notification" element={<Notification />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
       <Footer />
     </div>

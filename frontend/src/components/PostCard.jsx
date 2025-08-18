@@ -16,10 +16,10 @@ const [comment,setComment] =useState(false)
           <div className='w-12 h-12 rounded-4xl'>
                <img className='rounded-4xl w-12 h-12 border-2 border-white cursor-pointer' src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQn9zilY2Yu2hc19pDZFxgWDTUDy5DId7ITqA&s"} alt="" />
           </div>
-          <div className='text-lg font-semiblod'> 
-            Umesh Chandel
-          </div>
+          <div>
+          <div className='text-lg font-semibold'> Umesh Chandel</div>
           <div className='text-xs text-gray-500'>Software Engineer</div>
+          </div>
         </div>
         <div className='text-md p-4 my-3 whitespace-pre-line flex-grow'>
               {seeMore?desc:`${desc.slice(0,50)}...`} <span className='cursor-pointer text-gray-500' onClick={()=>setSeeMore(!seeMore)} >{seeMore?"See Less " :"See More"}</span>

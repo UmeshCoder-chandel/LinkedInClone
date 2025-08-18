@@ -2,6 +2,7 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import User from '../models/user.js';
+import {OAuth2Client} from 'google-auth-library'
 
 const registerUser=async (req,res) => {
     try {
@@ -46,4 +47,38 @@ const loginUser=async(req,res)=>{
     }
 }
 
-export default {registerUser,loginUser}
+const client =new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
+
+const loginGoogle=async(req,res)=>{
+    try {
+        const { token }=req.body;
+        const ticket=await client.verifyIdToken({
+            idToken:token,
+            audience:process.env.GOOGLE_CLIENT_ID
+        });
+        const payload=ticket.getPayload();
+        const {sub,email,name,picture}=payload;
+        const user=await User.findOne({email})
+        if(!user){
+            user=await User({GoogleId:sub,email,name,profilePic:picture})
+        }
+        res.status(200).json("login successful")
+
+    } catch (error) {
+            res.status(400).json("login falied") 
+        
+    }
+
+}
+ 
+const logOutUser= async(req,res)=>{
+try {
+    res.clearCookie('token',cookieOptions).json("logged out successfully")
+    
+} catch (error) {
+            res.status(500).json("login falied") 
+    
+}
+}
+
+export default {registerUser,loginUser,loginGoogle,logOutUser}

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PostCard from '../components/PostCard'
 import ProfileCard  from '../components/ProfileCard'
 import Card from '../components/Card'
@@ -6,9 +6,17 @@ import { FaVideo } from "react-icons/fa";
 import { MdInsertPhoto } from "react-icons/md";
 import { MdArticle } from "react-icons/md";
 import { Advertisement } from '../components/Advertiement';
+import { useSearchParams } from 'react-router-dom';
+import { Modal } from '../components/Modal';
+import { AddModels } from '../components/AddModels';
 
 
 export default function Home(){
+  const[addPostModal ,setaddPostModal] =useState(false)
+
+  const handlePostmodal=()=>{
+    setaddPostModal(prev=>!prev) 
+  }
   return (
 <div className='px-5 xl:px-50 py-9 flex gap-5 w-full mt-5 bg-gray-100'>
 {/* left side */}
@@ -36,12 +44,12 @@ export default function Home(){
   <Card padding={1}>
     <div className='flex gap-2 items-center'>
       <img className='rounded-full w-13 h-13 border-2 border-white curser-pointer' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKyyl57N-3um2nrU83PZgwIwA6uSzQnefrsg&s" alt="" />
-      <div className='w-full border-1 py-3 px-3 rounded-3xl curser-pointer hover:bg-gray-100'> Start a post</div>
+      <div onClick={()=>setaddPostModal(true)} className='w-full border-1 py-3 px-3 rounded-3xl curser-pointer hover:bg-gray-100'> Start a post</div>
     </div>
     <div className='w-full flex mt-3'>
-      <div className='flex gap-2 p-2 curser-pointer justify-center rounded-lg w-[33%] hover:bg-gray-100'><FaVideo sx={{color:'green'}} /> Video</div>
-      <div className='flex gap-2 p-2 curser-pointer justify-center rounded-lg w-[33%] hover:bg-gray-100'> <MdInsertPhoto />Photos</div>
-      <div className='flex gap-2 p-2 curser-pointer justify-center rounded-lg w-[33%] hover:bg-gray-100'><MdArticle /> Articles</div>
+      <div onClick={()=>setaddPostModal(true)} className='flex gap-2 p-2 curser-pointer justify-center rounded-lg w-[33%] hover:bg-gray-100'><FaVideo sx={{color:'green'}} /> Video</div>
+      <div onClick={()=>setaddPostModal(true)} className='flex gap-2 p-2 curser-pointer justify-center rounded-lg w-[33%] hover:bg-gray-100'> <MdInsertPhoto />Photos</div>
+      <div onClick={()=>setaddPostModal(true)} className='flex gap-2 p-2 curser-pointer justify-center rounded-lg w-[33%] hover:bg-gray-100'><MdArticle /> Articles</div>
     </div>
   </Card>
 </div>
@@ -73,7 +81,9 @@ export default function Home(){
       <Advertisement/>
      </div>
 </div>
-
+      { addPostModal && <Modal closeModel={handlePostmodal} title={""}>
+  <AddModels /> </Modal>
+}
 </div>
 
 
