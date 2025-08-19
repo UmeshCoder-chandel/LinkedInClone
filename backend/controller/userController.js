@@ -1,8 +1,9 @@
-import User from "../models/user";
+import User from "../models/user.js";
 
 
 const updateUser=async (req,res) => {
     try {
+        
         const {user} =req.body;
         const isuser=await User.findById(req.user._id);
         if(!isuser){
@@ -21,16 +22,28 @@ const updateUser=async (req,res) => {
 
 const getUserbyId=async (req,res) => {
     try {
-        const {id}=req.params;
-        const isUser=await User.findById(id);
+        const {name}=req.params;
+        const isUser=await User.findOne({name}).select("-password");
         if(!isUser){
             res.status(400).json("user not founded")
         }
-        
+        res.status(200).json(isUser);
     } catch (error) {
             res.status(500).json("some error") 
         
     }
+} 
+
+const getSuggestions=async (req,res) => {
+    try {
+        const user=await User.findById(req.user._id).select("connections");
+        const suggestions=await User.find({_id:{$ne:req.user._id,$nin:user.connections}}).select("name,profilePic,headline").limit(5);
+        res.status(200).json(suggestions);
+    } catch (error) {
+            res.status(500).json("some error") 
+        
+    }
+    
 }
 
-export default {updateUser,getUserbyId}
+export default {updateUser,getUserbyId,getSuggestions}

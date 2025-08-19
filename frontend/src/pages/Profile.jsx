@@ -3,7 +3,7 @@ import Card from "../components/Card";
 
 export const Profile = () => {
   return (
-    <>
+    <div className='px-5 xl:px-50 py-9 flex flex-col gap-5 w-full mt-5 bg-gray-100'>
       {/* Top Profile Section */}
       <Card>
         <div className="bg-white rounded-2xl shadow overflow-hidden">
@@ -111,6 +111,7 @@ export const Profile = () => {
           </div>
         </div>
       </Card>
-    </>
+    </div>
   );
 };
+

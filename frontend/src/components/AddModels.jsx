@@ -8,17 +8,14 @@ export const AddModels = () => {
             <div className='relative'>
                 <img className='w-15 h-15 rounded-full' src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKyyl57N-3um2nrU83PZgwIwA6uSzQnefrsg&s"} alt="" />
             </div>
-            <div className='text-2xl'>
-                Umesh Chandel
-
-            </div>
+            <div className='text-2xl'>Umesh Chandel</div>
 
         </div>
         <div>
             <textarea cols={50} rows={10} placeholder='what do you want to talk about' className='my-3 outline-0 text-xl p-2'></textarea>
         </div>
         <div>
-            <img className='w-20 h-20 rounded-xl ' />
+            <img className='w-20 h-20 rounded-xl ' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQn9zilY2Yu2hc19pDZFxgWDTUDy5DId7ITqA&s'/>
         </div>
         <div className='flex justify-between items-center'>
             <div className='my-2'>

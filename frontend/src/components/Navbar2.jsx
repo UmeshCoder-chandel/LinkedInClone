@@ -44,7 +44,7 @@ const Navbar2=()=>{
                             <MessageIcon sx={{color:location.pathname==='/messages'? "black":'gray'}} />
                             <div className={`text-sm text-gray-500${location.pathname==='/messages'? "border-b-3":''}`}>Messaging</div>
                     </Link>
-                    <Link to="/notifications" className="relative flex flex-col items-center cursor-pointer">
+                    <Link to="/notification" className="relative flex flex-col items-center cursor-pointer">
   <NotificationsIcon sx={{ color: location.pathname === '/notifications' ? 'black' : 'gray' }} />
   <span className=" absolute top-1 right-2  rounded-full text-xs px-1.5 py-0.5 bg-red-700 text-white">1</span>
   <div className={`text-sm text-gray-500 ${location.pathname === '/notifications' ? 'border-b-2 border-black' : ''}`}>

@@ -37,7 +37,7 @@ export default function Messages(){
               </div>
                   <div className='h-[360px] w-full overflow-auto border-b-1 border-gray-300'>
                        <div className='w-full border-b-1 border-gray-300 gap-3 p-4'>
-                        <img className='rounded-[100%] cursor-pointer w-16 h-15' src="" alt="" />
+                        <img className='rounded-[100%] cursor-pointer w-16 h-15' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQn9zilY2Yu2hc19pDZFxgWDTUDy5DId7ITqA&s" alt="" />
                         <div className='my-2'>
                           <div className='text-md'>User 1</div>
                           <div className='text-sm text-gray-500'>this is user 1</div>
@@ -48,13 +48,13 @@ export default function Messages(){
                             {/* for each message */}
                             <div className='flex w-full cursor-pointer border-gray-300 gap-3 p-4'>
                               <div className='shrick-0'>
-                                <img className='w-8 h-8 rounded-[100%] cursor-pointer' src="" alt="" />
+                                <img className='w-8 h-8 rounded-[100%] cursor-pointer' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQn9zilY2Yu2hc19pDZFxgWDTUDy5DId7ITqA&s" alt="" />
                               </div>
                               <div className='mb-2 w-full'>
                                 <div className='test-md'>User 1</div>
                           <div className='text-sm mt-6 hover:bg-gray-200'>this is message 1</div>
                                 <div>
-                                <img className='w-[240px] h-[180px] rounded-md ' src="" alt="" />
+                                <img className='w-[240px] h-[180px] rounded-md ' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQn9zilY2Yu2hc19pDZFxgWDTUDy5DId7ITqA&s" alt="" />
                               </div>
                               </div>
                             </div>
