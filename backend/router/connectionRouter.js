@@ -1,6 +1,6 @@
 import express from "express";
-import {auth} from "../authentication"
-import { acceptConnectionRequest, getConnectionRequests, getConnectionStatus, getUserConnections, rejectConnectionRequest, removeConnection, sendConnectionRequest } from "../controllers/connection.controller.js";
+import auth from "../authentication/auth.js"
+import { acceptConnectionRequest, getConnectionRequests, getConnectionStatus, getUserConnections, rejectConnectionRequest, removeConnection, sendConnectionRequest } from "../controller/connectionController.js";
 
 const router=express.Router();
 

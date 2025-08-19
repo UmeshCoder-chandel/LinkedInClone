@@ -1,6 +1,6 @@
 import React from 'react'
 import Card from '../components/Card'
-import { Convertion } from '../components/Convertion'
+import { Convertion } from '../components/Covertion'
 import { Advertisement } from '../components/Advertiement'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';

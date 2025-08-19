@@ -6,11 +6,13 @@ import postRouter from './router/postRouter.js'
 import NotificationRouter from './router/notificationRouter.js'
 import connectionRouter from './router/connectionRouter.js'
 import dotenv from 'dotenv'
+import cors from 'cors'
 import cookies from 'cookie-parser'
 dotenv.config()
 const app=express()
 connectDB();
 
+app.use(cors())
 const PORT=process.env.PORT || 3000
 
 app.use(express.json())

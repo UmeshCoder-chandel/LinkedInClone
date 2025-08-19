@@ -1,6 +1,6 @@
 import express from "express";
-import { deleteNotification, getUserNotifications, markNotificationAsRead } from "../controllers/notification.controller.js";
-import auth from '../authentication/auth.js';
+import { deleteNotification, getUserNotifications, markNotificationAsRead } from "../controller/notificationController.js";
+import auth from '../authentication/auth.js'
 
 
 const router=express.Router();

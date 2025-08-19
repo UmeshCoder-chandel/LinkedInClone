@@ -131,4 +131,4 @@ const LikePost=async (req,res) => {
 }
 
 
-export default {createPost,getfeedPost,getPostById,deletePost,createComment,LikePost}
+export  {createPost,getfeedPost,getPostById,deletePost,createComment,LikePost}

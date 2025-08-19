@@ -1,7 +1,7 @@
 import User from "../models/user.js";
 
 
-const updateUser=async (req,res) => {
+export const updateUser=async (req,res) => {
     try {
         
         const {user} =req.body;
@@ -20,7 +20,7 @@ const updateUser=async (req,res) => {
     
 }
 
-const getUserbyId=async (req,res) => {
+export const getUserbyId=async (req,res) => {
     try {
         const {name}=req.params;
         const isUser=await User.findOne({name}).select("-password");
@@ -34,7 +34,7 @@ const getUserbyId=async (req,res) => {
     }
 } 
 
-const getSuggestions=async (req,res) => {
+ export const getSuggestions=async (req,res) => {
     try {
         const user=await User.findById(req.user._id).select("connections");
         const suggestions=await User.find({_id:{$ne:req.user._id,$nin:user.connections}}).select("name,profilePic,headline").limit(5);
@@ -44,6 +44,4 @@ const getSuggestions=async (req,res) => {
         
     }
     
-}
-
-export default {updateUser,getUserbyId,getSuggestions}
+};
