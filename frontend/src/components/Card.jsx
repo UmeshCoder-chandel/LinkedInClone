@@ -1,13 +1,14 @@
-
-
 import React from 'react'
 
-const Card = (props) => {
+const Card = ({ children, padding = true, className = "" }) => {
   return (
-    <div className={`w-full h-[100%] flex flex-col border-1 border-gray-300 bg-white rounded-md ${props.padding ? 'p-5' : 'p-0'}`}>
-        {props.children}
+    <div
+      className={`w-full h-full flex flex-col border border-gray-300 bg-white rounded-md 
+        ${padding ? 'p-5' : 'p-0'} ${className}`}
+    >
+      {children}
     </div>
   )
 }
 
-export default Card;
+export default Card

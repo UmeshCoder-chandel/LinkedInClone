@@ -12,9 +12,12 @@ dotenv.config()
 const app=express()
 connectDB();
 
-app.use(cors())
+app.use(cors({
+    credentials:true,
+    origin:"http://localhost:5173"
+}))
 const PORT=process.env.PORT || 3000
-
+ 
 app.use(express.json())
 app.use(cookies())
 app.use("/api/auth",authRouter)
@@ -23,6 +26,11 @@ app.use("/api/posts",postRouter)
 app.use("/api/notifications",NotificationRouter)
 app.use("/api/connections",connectionRouter)
 
+app.use((req, res, next) => {
+  res.removeHeader("Cross-Origin-Opener-Policy");
+  res.removeHeader("Cross-Origin-Embedder-Policy");
+  next();
+});
 
 
 app.listen(PORT,()=>{

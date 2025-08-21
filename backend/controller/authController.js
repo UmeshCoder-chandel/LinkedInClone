@@ -7,17 +7,17 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 const cookieOptions={
-    httpOnly:true
+    httpOnly:true,
+    secure:false,
+    sameSite:'lax'
 }
 
-const registerUser=async (req,res) => {
+export const registerUser=async (req,res) => {
     try {
         const {name,email,password}=req.body;
        if(!name || !email || !password ){
         return res.status(400).json("All fields are required")
        }
-
-
         const user1=await User.findOne({email})
         if(user1){ return res.status(404).send("Email Already Exited")}
          if(password.length<6){
@@ -25,15 +25,7 @@ const registerUser=async (req,res) => {
          }  
          const hashpassword=await bcrypt.hash(password,10)
         const newUser=new User({name,email,password:hashpassword})
-         await newUser.save();
-       const token =jwt.sign({userId:newUser._id},process.env.JWT_TOKEN,{expiresIn:"7d"})
-        res.cookie("access_token",token,{
-            httpOnly:true,
-            maxAge:7*24*60*60*1000,
-            sameSite:"strict"
-            
-        })
-
+             await newUser.save();
           res.status(200).json("registration successfully")
 
     } catch (error) {
@@ -43,14 +35,14 @@ const registerUser=async (req,res) => {
     
 }
 
-const loginUser=async(req,res)=>{
+export const loginUser=async(req,res)=>{
     try{
         const {email,password}=req.body
         const user=await User.findOne({email})
         if(!user){
-            res.status(401).json("invalid User or password")
+            res.status(401).json("invalid User or password")        
         }
-        const pass=await bcrypt.compare(password,user.password)
+        const pass= bcrypt.compare(password,user.password)
         if(!pass){
             res.status(401).json("invalid password")
         }
@@ -66,9 +58,9 @@ const loginUser=async(req,res)=>{
     }
 }
 
-const client =new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
+ const client =new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
-const loginGoogle=async(req,res)=>{
+export const loginGoogle=async(req,res)=>{
     try {
         const { token }=req.body;
         const ticket=await client.verifyIdToken({
@@ -77,29 +69,28 @@ const loginGoogle=async(req,res)=>{
         });
         const payload=ticket.getPayload();
         const {sub,email,name,picture}=payload;
-        const user=await User.findOne({email})
+        let user=await User.findOne({email})
         if(!user){
             user=await User({GoogleId:sub,email,name,profilePic:picture})
+            await user.save();  
         }
         const cookietoken=jwt.sign({userId:user._id},process.env.JWT_TOKEN,{expiresIn:"7d"})
         res.cookie("access_token",cookietoken,cookieOptions)
-        res.status(200).json("login successful")
+        res.status(200).json("login successful",user)
 
     } catch (error) {
-            res.status(400).json("login falied") 
+            res.status(400).json("login falied", error.message) 
         
     }
 
 }
  
-const logOutUser= async(req,res)=>{
+export const logOutUser= async(req,res)=>{
 try {
-    res.clearCookie('token',cookieOptions).json("logged out successfully")
-    
+    res.clearCookie('access_token',cookieOptions).json("logged out successfully")
+
 } catch (error) {
             res.status(500).json("login falied") 
     
 }
 }
-
-export default {registerUser,loginUser,loginGoogle,logOutUser}

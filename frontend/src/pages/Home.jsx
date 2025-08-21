@@ -1,140 +1,142 @@
-import React, { useState } from 'react'
+import React, { use, useState,useEffect } from 'react'
 import PostCard from '../components/PostCard'
-import ProfileCard  from '../components/ProfileCard'
+import ProfileCard from '../components/ProfileCard'
 import Card from '../components/Card'
 import { FaVideo } from "react-icons/fa";
-import { MdInsertPhoto } from "react-icons/md";
-import { MdArticle } from "react-icons/md";
-import { Advertisement } from '../components/Advertiement';
-import { useSearchParams } from 'react-router-dom';
-import { Modal } from '../components/Modal';
-import { AddModels } from '../components/AddModels';
-
-
-export default function Home(){
-  const[addPostModal ,setaddPostModal] =useState(false)
-
-  const handlePostmodal=()=>{
-    setaddPostModal(prev=>!prev) 
-  }
-  return (
-<div className='px-5 xl:px-50 py-9 flex gap-5 w-full mt-5 bg-gray-100'>
-{/* left side */}
-<div  className='w-[21%] sm:block sm:w-[23%] hidden py-5' >
-<div className='h-fit'>
-  <ProfileCard />
-</div>
-<div className='w-full my-5'>
-  <Card padding={1}>
-    <div className='w-full flex justify-between'>
-    <div >Profile Views</div>
-    <div className='text-blue-900'>42</div>
-    </div>
-    <div className='w-full flex justify-between'>
-    <div>Post Impressions</div>
-    <div className='text-blue-900'>42</div>
-    </div>
-  </Card>
-</div>
-</div>
-
-{/* middles  */}
-<div className='w-[100%] py-5 sm:w-[50%]'>
-<div>
-  <Card padding={1}>
-    <div className='flex gap-2 items-center'>
-      <img className='rounded-full w-13 h-13 border-2 border-white curser-pointer' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKyyl57N-3um2nrU83PZgwIwA6uSzQnefrsg&s" alt="" />
-      <div onClick={()=>setaddPostModal(true)} className='w-full border-1 py-3 px-3 rounded-3xl curser-pointer hover:bg-gray-100'> Start a post</div>
-    </div>
-    <div className='w-full flex mt-3'>
-      <div onClick={()=>setaddPostModal(true)} className='flex gap-2 p-2 curser-pointer justify-center rounded-lg w-[33%] hover:bg-gray-100'><FaVideo sx={{color:'green'}} /> Video</div>
-      <div onClick={()=>setaddPostModal(true)} className='flex gap-2 p-2 curser-pointer justify-center rounded-lg w-[33%] hover:bg-gray-100'> <MdInsertPhoto />Photos</div>
-      <div onClick={()=>setaddPostModal(true)} className='flex gap-2 p-2 curser-pointer justify-center rounded-lg w-[33%] hover:bg-gray-100'><MdArticle /> Articles</div>
-    </div>
-  </Card>
-</div>
- <div className='border-b-1 border-gray-400 w-[100%] my-5' />
- 
- <div className='w-full flex flex-col gap-5'>
-   <PostCard />
- </div>
-
-
-</div>
-{/* rigth side */}
-<div className='w-[26%] py-5 hidden md:block'>
-  <div>
-    <Card padding={1}>
-         <div className='text-xl'>LinkedIn News</div>
-         <div className='text-gray-600'>top stories </div>
-         <div className='my-1'>
-         <div className='text-md'>Buffett to remain Berkshire chair </div>
-         <div className='text-xs text-gray-400'>2h ago</div>
-         </div>
-         <div className='my-1'>
-         <div className='text-md'>Buffett to remain Berkshire chair </div>
-         <div className='text-xs text-gray-400'>2h ago</div>
-         </div>
-    </Card>
-  </div>
-     <div className='my-5 sticky top-19'>
-      <Advertisement/>
-     </div>
-</div>
-      { addPostModal && <Modal closeModel={handlePostmodal} title={""}>
-  <AddModels /> </Modal>
+import { MdInsertPhoto, MdArticle } from "react-icons/md";
+import { Advertisement } from '../components/Advertiement'
+import { Modal } from '../components/Modal'
+import { AddModels } from '../components/AddModels'
+import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+export default function Home() {
+  const [addPostModal, setAddPostModal] = useState(false)
+  const [personData, setPersonData] = useState(null)
+  const [post ,setPost]=useState([])
+  // const fetchData=async()=>{
+  //   const res=await axios.get('/api/auth/self',{withCredentials:true} ).then((res)=>{
+  //     // console.log(res);
+  //     setPersonData(res.data.user)  
+  //   }).catch(err=>{
+  //     console.log(err);
+  //     toast.error(err?.response?.data?.message || 'Something went wrong')
+  //   })
+  // }
+  const fetchAllData = async () => {
+try {
+        const [userdata,postdata]=await Promise.all([
+        await  axios.get('/api/auth/self',{withCredentials:true}),
+         await axios.get('/api/posts',{withCredentials:true})
+      ])
+      setPersonData(userdata.data.user)
+      localStorage.setItem('user', JSON.stringify(userdata.data.user))
+      setPost(postdata.data.posts)
+} catch (error) {
+  console.log(error);
+  toast.error(error?.response?.data?.message || 'Something went wrong')
 }
-</div>
+  }
+  useEffect(() => {
+    fetchAllData()
+  }, [])
+    const handlePostmodal = () => {
+      setAddPostModal(prev => !prev)
+    }
+    return (
+      <div className="px-6 md:px-12 pt-24 flex gap-6 w-full min-h-screen bg-gradient-to-br from-gray-100 to-gray-300">
+      
+      {/* Left Sidebar */}
+      <div className="hidden sm:block w-[23%] space-y-5">
+        <div className="backdrop-blur-md bg-white/40 border border-white/20 rounded-2xl shadow-md p-4">
+          <ProfileCard  data={personData}/>
+        </div>
 
+        <div className="backdrop-blur-md bg-white/40 border border-white/20 rounded-2xl shadow-md p-4">
+          <div className="flex justify-between">
+            <span>Profile Views</span>
+            <span className="text-blue-900 font-semibold">42</span>
+          </div>
+          <div className="flex justify-between mt-2">
+            <span>Post Impressions</span>
+            <span className="text-blue-900 font-semibold">42</span>
+          </div>
+        </div>
+      </div>
 
-    // <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-    //   <aside className="hidden md:block">
-    //     <div className="bg-white p-4 rounded shadow-sm">
-    //       <div className="w-full flex items-center gap-3">
-    //         <div className="w-12 h-12 rounded-full bg-gray-200" />
-    //         <div>
-    //           <div className="font-semibold">Your Name</div>
-    //           <div className="text-xs text-gray-500">Headline</div>
-    //         </div>
-    //       </div>
+      {/* Middle Feed */}
+      <div className="w-full sm:w-[50%] space-y-6">
+        {/* Post Box */}
+        <div className="backdrop-blur-md bg-white/40 border border-white/20 rounded-2xl shadow-md p-4">
+          <div className="flex items-center gap-3">
+            <img
+              className="w-12 h-12 rounded-full border-2 border-white cursor-pointer"
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKyyl57N-3um2nrU83PZgwIwA6uSzQnefrsg&s"
+              alt="profile"
+            />
+            <div
+              onClick={() => setAddPostModal(true)}
+              className="w-full py-3 px-4 rounded-full border border-white/20 cursor-pointer hover:bg-white/30"
+            >
+              Start a post
+            </div>
+          </div>
 
-    //       <div className="mt-4">
-    //         <div className="text-sm text-gray-600">Connections</div>
-    //         <div className="font-semibold">42</div>
-    //       </div>
-    //     </div>
-    //   </aside>
+          {/* Post Actions */}
+          <div className="flex justify-between mt-4">
+            <div onClick={handlePostmodal} className="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer hover:bg-white/30">
+              <FaVideo className="text-green-600" /> Video
+            </div>
+            <div onClick={handlePostmodal} className="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer hover:bg-white/30">
+              <MdInsertPhoto className="text-blue-500" /> Photos
+            </div>
+            <div onClick={handlePostmodal} className="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer hover:bg-white/30">
+              <MdArticle className="text-orange-600" /> Articles
+            </div>
+          </div>
+        </div>
 
-    //   <section className="md:col-span-2 space-y-4">
-    //     <div className="bg-white p-4 rounded shadow-sm">
-    //       <div className="flex items-center gap-3">
-    //         <div className="w-10 h-10 rounded-full bg-gray-200" />
-    //         <input className="flex-1 rounded-full bg-gray-100 px-4 py-2" placeholder="Start a post" />
-    //       </div>
-    //     </div>
+        {/* Posts */}
+        <div className="space-y-5">
+          {
+            // post.map((item, index) => (
+            //   <PostCard key={index} data={item} personData={personData} />
+            // ))
+          }
+<PostCard />
+        </div>
+      </div>
 
-    //     {SAMPLE_POSTS.map(p => (
-    //       <PostCard key={p.id} post={p} />
-    //     ))}
-    //   </section>
+      {/* Right Sidebar */}
+      <div className="hidden md:block w-[25%] space-y-5">
+        <div className="backdrop-blur-md bg-white/40 border border-white/20 rounded-2xl shadow-md p-4">
+          <div className="text-lg font-semibold">LinkedIn News</div>
+          <div className="text-sm text-gray-600">Top stories</div>
 
-    //   <aside className="hidden lg:block">
-    //     <div className="bg-white p-4 rounded shadow-sm">
-    //       <h3 className="font-semibold">People you may know</h3>
-    //       <div className="mt-3 space-y-3">
-    //         <div className="flex items-center justify-between">
-    //           <div className="flex items-center gap-3">
-    //             <div className="w-10 h-10 rounded-full bg-gray-200" />
-    //             <div>
-    //               <div className="font-medium">Aman Sharma</div>
-    //               <div className="text-xs text-gray-500">Designer</div>
-    //             </div>
-    //           </div>
-    //           <button className="text-sm text-blue-600">Connect</button>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </aside>
-    // </div>
+          <div className="mt-3 space-y-3">
+            <div>
+              <div className="text-sm font-medium">Buffett to remain Berkshire chair</div>
+              <div className="text-xs text-gray-400">2h ago</div>
+            </div>
+            <div>
+              <div className="text-sm font-medium">Tech hiring slows down in Q3</div>
+              <div className="text-xs text-gray-400">5h ago</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="sticky top-24">
+          <Advertisement />
+        </div>
+      </div>
+
+      {/* Post Modal */}
+      {addPostModal && (
+        <Modal closeModel={handlePostmodal} title="">
+          <AddModels />
+        </Modal>
+      )}
+
+      <ToastContainer />
+    </div>
   )
 }

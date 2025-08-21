@@ -1,29 +1,47 @@
-
 import React from 'react'
 import Card from './Card'
 
 export const Advertisement = () => {
   return (
-    <div className='sticky top-18'>
-        <Card padding={0}>
-            <div className='relative h-25'> 
-            <div className='relative h-22 w-full rounded-md'>
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKyyl57N-3um2nrU83PZgwIwA6uSzQnefrsg&s" alt="" />
-            </div>
-            <div className='absolute top-14 left-[40%] z-10'>
-                 <img className='rounded-full border-2 h-14 w-14 border-white curser-pointer' src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQn9zilY2Yu2hc19pDZFxgWDTUDy5DId7ITqA&s"} alt="" />
-            </div>
+    <div className="sticky top-18">
+      <Card padding={0}>
+        <div className="relative">
+          {/* Banner */}
+          <div className="relative w-full h-28 rounded-t-md overflow-hidden">
+            <img 
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKyyl57N-3um2nrU83PZgwIwA6uSzQnefrsg&s" 
+              alt="banner"
+              className="w-full h-full object-cover"
+            />
+            {/* Overlay for glass look */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/40 backdrop-blur-sm"></div>
+          </div>
 
+          {/* Profile */}
+          <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 z-10">
+            <img 
+              className="rounded-full border-4 border-white shadow-lg h-20 w-20 object-cover cursor-pointer" 
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQn9zilY2Yu2hc19pDZFxgWDTUDy5DId7ITqA&s" 
+              alt="profile"
+            />
+          </div>
         </div>
 
-        <div className='px-5 my-5 mx-auto'>
-            <div className='text-sm font-semibold text-center'>Umesh</div>
-            <div className='text-sm my-3 text-center'>get the latest jobs and industry news</div>
-            <div className='text-sm  my-1 border-1 rounded-2xl  font-bold text-center border-blue-950 text-white bg-blue-800 cursor-pointer'>Explore</div>
+        {/* Content */}
+        <div className="px-5 pt-12 pb-6 mx-auto text-center">
+          <div className="text-lg font-semibold text-gray-800">Umesh</div>
+          <div className="text-sm my-2 text-gray-500">
+            Get the latest jobs and industry news
+          </div>
 
+          {/* Glassmorphism Button */}
+          <button className="px-6 py-2 mt-3 rounded-2xl font-semibold text-white 
+            bg-blue-600/80 backdrop-blur-md shadow-md hover:bg-blue-700/90 
+            transition duration-300">
+            Explore
+          </button>
         </div>
-
-        </Card>
+      </Card>
     </div>
   )
 }

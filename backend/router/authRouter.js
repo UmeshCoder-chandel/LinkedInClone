@@ -1,17 +1,17 @@
 import express from 'express'
-import authController from '../controller/authController.js';
+import {registerUser,logOutUser,loginGoogle,loginUser} from '../controller/authController.js';
 import auth from '../authentication/auth.js';
 
 
 const router=express.Router();
 
-router.post("/register",authController.registerUser)
+router.post("/register",registerUser)
 
-router.post("/login",authController.loginUser)
-router.post("/google",authController.loginGoogle)
-router.post("/logout",authController.logOutUser)
+router.post("/login",loginUser)
+router.post("/google",loginGoogle)
+router.post("/logout", logOutUser)
 
-router.get('/user',auth,(req,res)=>{
-      res.status(200).json({user:req.user})
+router.get('/self',auth,(req,res)=>{
+    return  res.status(200).json({user:req.user})
 })
 export default router; 
