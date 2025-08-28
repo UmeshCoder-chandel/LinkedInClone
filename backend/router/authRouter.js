@@ -9,9 +9,11 @@ router.post("/register",registerUser)
 
 router.post("/login",loginUser)
 router.post("/google",loginGoogle)
-router.post("/logout", logOutUser)
+router.post("/logout",auth, logOutUser)
 
 router.get('/self',auth,(req,res)=>{
+    console.log(req.user);
+    
     return  res.status(200).json({user:req.user})
 })
 export default router; 

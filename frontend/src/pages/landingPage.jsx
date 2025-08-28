@@ -2,14 +2,14 @@ import { GoogleLogin } from "@react-oauth/google";
 import { Link } from "react-router-dom";
 import MyGoogleLogin from "../components/MyGoogleLogin";
 
-const LandingPage = () => {
+const LandingPage = (props) => {
     return (
         <div className="my-4 py-[50px] md:pl-[120px] px-5 md:flex justify-between">
             <div className="md:w-[40%]">
                 <div className="text-4xl mx-auto text-gray-500">Welcome to LinkedIn Community</div>
 
                 <div className="my-3 flex mx-auto mt-[20px] bg-white gap-2 p-4 rounded-3xl w-[70%] text-black cursor-pointer">
-                   <MyGoogleLogin />
+                   <MyGoogleLogin  changeValue={props.changeValue} />
                 </div>
                 <Link to={'/login'} className="my-3 flex mx-auto mt-[20px] bg-white gap-2 p-4 rounded-3xl w-[70%] text-black cursor-pointer">
                    Sign In

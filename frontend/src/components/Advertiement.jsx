@@ -1,7 +1,14 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Card from './Card'
+import assets from '../assets'
 
 export const Advertisement = () => {
+  const [userData,setUserData] =useState(null)
+
+  useEffect(()=>{
+    let userData=localStorage.getItem('userInfo')
+    setUserData(userData? JSON.parse(userData):null)
+  },[])
   return (
     <div className="sticky top-18">
       <Card padding={0}>
@@ -21,7 +28,7 @@ export const Advertisement = () => {
           <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 z-10">
             <img 
               className="rounded-full border-4 border-white shadow-lg h-20 w-20 object-cover cursor-pointer" 
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQn9zilY2Yu2hc19pDZFxgWDTUDy5DId7ITqA&s" 
+              src={assets.image || null}
               alt="profile"
             />
           </div>
@@ -45,3 +52,5 @@ export const Advertisement = () => {
     </div>
   )
 }
+
+

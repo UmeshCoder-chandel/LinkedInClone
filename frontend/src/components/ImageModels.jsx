@@ -1,17 +1,80 @@
+import axios from 'axios'
+import React, { useState } from 'react'
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
-import React from 'react'
+export const ImageModels = ({ isCircular, selfData, handleEditButton }) => {
+  const [imageLink, setImageLink] = useState(isCircular ? selfData?.profilePic : selfData?.coverPic)
+  const [loading, setLoading] = useState(false)
 
-export const ImageModels = (props) => {
+
+  const handleInputImage = async (e) => {
+    const files = e.target.files;
+    const data = new FormData();
+    data.append("file", files[0])
+
+    data.append("upload_preset", "linkdinClone")
+    setLoading(true)
+    try {
+      const res = await axios.post("https://api.cloudinary.com/v1_1/dcpb8lsmn/image/upload", data);
+      const imageUrl = res.data.url;
+      setImageLink(imageUrl);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to upload image");
+    } finally {
+      setLoading(false)
+    }
+
+  }
+  const handleSubmit = async () => {
+    let { data } = { ...selfData }
+    if (isCircular) {
+      data = { ...data, ['profilePic']: imageLink }
+    } else {
+      data = { ...data, ['coverPic']: imageLink }
+    }
+    handleEditButton(data)
+  }
+
+
   return (
-    <div className='p-5 flex relative items-center flex-col h-full'>
-        {props.isCircular ? (
-               <img className='rounded-full w-[150px] h-[150px]' src="https://images.unsplash.com/photo-1508780709619-79562169bc64?q=80&w=1200" alt="" />
-        ):(
-             <img className='rounded-xl w-full h-[200px] object-cover' src="https://images.unsplash.com/photo-1508780709619-79562169bc64?q=80&w=1200" alt="" />
-        )}
-        <label htmlFor="btn-sumbit" className='absolute bottom-10 left-0 p-3 bg-blue-900 text-white rounded-2xl cursor-pointer'>Upload</label>
-        <input type="file" className="hidden" id="btn-sumbit" />
-        <div  className='absolute bottom-10 right-0 p-3 bg-blue-900 text-white rounded-2xl cursor-pointer'>Submit</div>
+    <div className="p-5 flex flex-col items-center h-full relative">
+      {/* Image Preview */}
+      {isCircular ? (
+        <img
+          className="rounded-full w-[150px] h-[150px] object-cover border-4 border-gray-200 shadow-md"
+          src={imageLink}
+          alt="preview"
+        />
+      ) : (
+        <img
+          className="rounded-xl w-full h-[200px] object-cover shadow-md"
+          src={imageLink}
+          alt="preview"
+        />
+      )}
+
+      {/* Buttons Section */}
+      <div className="flex gap-4 mt-5">
+        <label
+          htmlFor="btn-submit"
+          className="px-5 py-2 bg-gray-200 text-gray-700 rounded-lg cursor-pointer hover:bg-gray-300 transition"
+        >
+          Upload
+        </label>
+        <input onChange={handleInputImage} type="file" className="hidden" id="btn-submit" />
+        {
+          loading ?<Box sx={{ display: 'flex' }}>
+      <CircularProgress />
+    </Box> :<button onClick={handleSubmit} className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+          Submit
+        </button>
+        }
+         
+      </div>
     </div>
   )
 }
+
+

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 import GroupsIcon from "@mui/icons-material/Groups";
@@ -7,10 +7,72 @@ import MessageIcon from "@mui/icons-material/Message";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import assets from "../assets";
+import axios from "axios";
 
 const Navbar2 = () => {
   const [mobileMenu, setMobileMenu] = useState(false);
+  const [userData, setUserData] = useState(null);
   const location = useLocation();
+  const [searchTerm, setSearchTerm] = useState("")
+  const [debounceTerm, setDebounceTerm] = useState('')
+  const [searchUser, setSearchUser] = useState([])
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebounceTerm(searchTerm)
+    }, 300)
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [searchTerm])
+
+  // useEffect(() => {
+  //   if (debounceTerm) {
+  //     searchAPICall()
+  //   }
+  // }, [debounceTerm])
+
+  // const searchAPICall = async () => {
+  //   await axios.get(`http://localhost:4000/api/user`, { withCredentials: true }).then(res => {
+  //     console.log(res);
+  //     setSearchUser(res.data.users)
+  //   }).catch(err => {
+  //     console.log(err);
+
+  //   })
+  // }
+
+
+ useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        if (debounceTerm.trim() === "") {
+          setSearchUser([]);
+          return;
+        }
+        const res = await axios.get(
+          `http://localhost:4000/api/user`,{withCredentials:true}
+        );
+
+        // filter users based on search term
+        const filtered = res.data.users.filter(
+          (user) =>
+            user.name.toLowerCase().includes(debounceTerm.toLowerCase())
+        );
+        setSearchUser(filtered);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    fetchUsers();
+  }, [debounceTerm]);
+
+  useEffect(() => {
+    let userData = localStorage.getItem('userInfo')
+    setUserData(userData ? JSON.parse(userData) : null)
+  }, [])
 
   return (
     <nav className="backdrop-blur-md bg-white/40 shadow-lg border-b border-white/30 fixed top-0 left-0 w-full z-50">
@@ -29,12 +91,57 @@ const Navbar2 = () => {
           </Link>
 
           {/* Search Bar (hidden on mobile) */}
-          <div className="hidden md:block relative">
+          {/* <div className="hidden md:block relative">
             <input
+              value={searchTerm}
+              onChange={(e) => { setSearchTerm(e.target.value) }}
               placeholder="Search"
               className="w-72 bg-white/30 backdrop-blur-md rounded-lg h-9 px-4 text-sm placeholder-gray-600 outline-none focus:ring-2 focus:ring-blue-400"
             />
-          </div>
+            {
+              searchUser.length > 0 && debounceTerm.length!==0 && <div className="">
+                {
+                  searchUser.map((item, index) => {
+                    return (
+                      <Link to={`/profile/${item?._id}`} key={index} onClick={()=>setSearchTerm("")}>
+                        <div><img src={item?.profilePic} alt="" /></div>
+                        <div>{item?.name}</div>
+                      </Link>
+                    )
+                  })
+                }
+              </div>
+            }
+          </div> */}
+          <div className="hidden md:block relative">
+  <input
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+    placeholder="Search"
+    className="w-72 bg-white/30 backdrop-blur-md rounded-lg h-9 px-4 text-sm placeholder-gray-600 outline-none focus:ring-2 focus:ring-blue-400"
+  />
+
+  {searchUser.length > 0 && debounceTerm.length !== 0 && (
+    <div className="absolute top-full left-0 mt-1 w-72 bg-white rounded-lg shadow-lg z-50 overflow-hidden">
+      {searchUser.map((item, index) => (
+        <Link
+          to={`/profile/${item?._id}`}
+          key={index}
+          onClick={() => setSearchTerm("")}
+          className="flex items-center px-3 py-2 hover:bg-blue-100 transition"
+        >
+          <img
+            src={item?.profilePic}
+            alt={item?.name}
+            className="w-8 h-8 rounded-full mr-2 object-cover"
+          />
+          <span className="text-sm text-gray-700">{item?.name}</span>
+        </Link>
+      ))}
+    </div>
+  )}
+</div>
+
         </div>
 
         {/* Desktop Menu */}
@@ -65,11 +172,10 @@ const Navbar2 = () => {
                 )}
               </div>
               <div
-                className={`text-sm mt-0.5 transition-all ${
-                  location.pathname === item.path
+                className={`text-sm mt-0.5 transition-all ${location.pathname === item.path
                     ? "text-black border-b-2 border-black"
                     : "text-gray-600 group-hover:text-black"
-                }`}
+                  }`}
               >
                 {item.label}
               </div>
@@ -77,17 +183,17 @@ const Navbar2 = () => {
           ))}
 
           {/* Profile */}
-          <Link
-            to={`/profile/umesh`}
+          {userData?._id && <Link
+            to={`/profile/${userData?._id}`}
             className="flex flex-col items-center cursor-pointer"
           >
             <img
               className="w-9 h-9 rounded-full border border-white shadow-md"
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQn9zilY2Yu2hc19pDZFxgWDTUDy5DId7ITqA&s"
+              src={userData?.profilePic || assets.image}
               alt="me"
             />
             <div className="text-sm text-gray-600 hover:text-black">Me</div>
-          </Link>
+          </Link>}
         </div>
 
         {/* Mobile Menu Button */}
@@ -109,7 +215,7 @@ const Navbar2 = () => {
           <Link to="/jobs" onClick={() => setMobileMenu(false)}>Jobs</Link>
           <Link to="/messages" onClick={() => setMobileMenu(false)}>Messaging</Link>
           <Link to="/notifications" onClick={() => setMobileMenu(false)}>Notifications</Link>
-          <Link to="/profile/umesh" onClick={() => setMobileMenu(false)}>Me</Link>
+          <Link to={`/profile/${userData?._id}`} onClick={() => setMobileMenu(false)}>Me</Link>
         </div>
       )}
     </nav>

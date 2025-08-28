@@ -14,6 +14,9 @@ import { Profile } from './pages/Profile'
 
 import axios from 'axios'
 import Jobs from './pages/Jobs'
+import ViewResume from './pages/ViewResume'
+import AllActivities from './pages/allActivities'
+import SingleActivity from './pages/singleActivity'
 
 
 function App(){
@@ -25,29 +28,24 @@ function App(){
     setIsLogin(val)
   }
 
-  // const fetchData=async()=>{
-  //   await axios.post(`http://localhost:4000/api/auth/login`,{email:"",password:""}).then(()=>{
-  //     console.log(res);   
-  //   }).catch(err=>{
-  //     console.log(err);
-  //   })
-  // }
-  // useEffect(()=>{
-  //   fetchData()
-  // },[])
   return (
     <div className="bg-gray-100 w-{100%} h-{100%} box-border">
     {islogin ?  <Navbar2 />: <Navbar1/>}
       <Routes>
-        <Route path="/" element={islogin?<Navigate to={'/home'} />:<LandingPage />} />
-        <Route path="/signup" element={islogin?<Navigate to={'/home'} />:<SignUp />} />
+        <Route path="/" element={islogin?<Navigate to={'/home'} />:<LandingPage changeValue={changeLogin} />} />
+        <Route path="/signup" element={islogin?<Navigate to={'/home'} />:<SignUp changeValue={changeLogin} />} />
         <Route path="/login" element={islogin?<Navigate to={'/home'} />:<Login changeValue={changeLogin} />} />
         <Route path="/home" element={islogin? <Home /> :<Navigate to={'/login'}/>} />
         <Route path="/messages" element={ islogin?<Messages />:<Navigate to={'/login'}/>} />
         <Route path="/network" element={islogin?<Network />:<Navigate to={'/login'}/>} />
         <Route path="/jobs" element={islogin?<Jobs/>:<Navigate to={'/login'}/>} />
         <Route path="/notification" element={islogin?<Notification />:<Navigate to={'/login'}/>} />
-        <Route path="/profile/:id" element={islogin?<Profile />:<Navigate to={'/login'}/>} />
+        {/* <Route path="/view-resume" element={islogin?<ViewResume />:<Navigate to={'/login'}/>} /> */}
+        <Route path='/profile/:id' element={islogin?<Profile />:<Navigate to={'/login'}/>} />
+         <Route path='/profile/:id/activities' element={islogin?<AllActivities /> : <Navigate to={'/login'}/>} />
+
+        <Route path='/profile/:id/activities/:postId' element={islogin?<SingleActivity /> : <Navigate to={'/login'}/>} />
+
       </Routes>
       <Footer />
     </div>
@@ -55,3 +53,5 @@ function App(){
 }
 
 export default App
+
+

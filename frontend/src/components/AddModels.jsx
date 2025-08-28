@@ -1,15 +1,46 @@
 import React, { useState } from "react";
 import ImageIcon from "@mui/icons-material/Image";
 import { IoSend } from "react-icons/io5";
+import { toast, ToastContainer } from "react-toastify";
+import axios from "axios";
 
-export const AddModels = () => {
-  const [preview, setPreview] = useState(null);
+export const AddModels = (props) => {
+  const [imageUrl, setImageUrl]= useState("")
+  const [desc,setDesc]= useState("")
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setPreview(URL.createObjectURL(file));
-    }
+// cloudinaryname=dcpb8lsmn
+
+const handlePost=async()=>{
+  if(desc.trim().length===0 && !imageUrl) return toast.error("please enter post")
+      await axios.post("http://localhost:4000/api/posts",{
+    desc:desc,
+  image:imageUrl},{withCredentials:true}).then(res=>{
+         window.location.reload();
+
+  }).catch(err=>{
+    console.log(err);
+    toast.error("Failed to create post");
+  });
+};
+
+// upload Name = linkdinClone
+  const handleFileChange = async(e) => {
+    const files = e.target.files;
+    if (!files) return;
+   const data = new FormData();
+   data.append("file",files[0])
+
+   data.append("upload_preset","linkdinClone")
+   try {
+     const res = await axios.post("https://api.cloudinary.com/v1_1/dcpb8lsmn/image/upload", data);
+    const imageUrl = res.data.secure_url;
+    console.log(imageUrl);
+    setImageUrl(imageUrl);
+   } catch (error) {
+     console.error(error);
+     toast.error("Failed to upload image");
+   }
+    
   };
 
   return (
@@ -18,24 +49,26 @@ export const AddModels = () => {
       <div className="flex gap-4 items-center mb-4">
         <img
           className="w-14 h-14 rounded-full border-2 border-white/30"
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKyyl57N-3um2nrU83PZgwIwA6uSzQnefrsg&s"
+          src={props.personData?.profilePic}   
           alt="profile"
         />
-        <div className="text-lg font-semibold text-gray-800">Umesh Chandel</div>
+        <div className="text-lg font-semibold text-gray-800">{props.personData?.name}</div>
       </div>
 
       {/* Textarea */}
       <textarea
+      value={desc}
+      onChange={(e) => setDesc(e.target.value)}
         rows={4}
         placeholder="What do you want to talk about?"
         className="w-full resize-none outline-none text-gray-800 placeholder-gray-500 text-base p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500"
       ></textarea>
 
       {/* Preview Image */}
-      {preview && (
+      {imageUrl && (
         <div className="my-3">
           <img
-            src={preview}
+            src={imageUrl}
             alt="preview"
             className="w-32 h-32 rounded-xl object-cover"
           />
@@ -61,10 +94,15 @@ export const AddModels = () => {
         </div>
 
         {/* Post Button */}
-        <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-800 text-white py-2 px-5 rounded-full shadow-md transition">
+        <button onClick={handlePost} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-800 text-white py-2 px-5 rounded-full shadow-md transition">
           Post <IoSend />
         </button>
       </div>
+      <ToastContainer />
     </div>
   );
 };
+
+
+
+

@@ -3,6 +3,10 @@ import User from '../models/user.js';
 
 const auth = async (req,res,next) => {
     try {
+        console.log("auth middleware");
+console.log(req.cookies);
+
+        
         const token = req.cookies.access_token;
         if (!token) {
             return res.status(401).json({
@@ -18,6 +22,8 @@ const auth = async (req,res,next) => {
        if(!user){
         return res.status(400).json("user not found")
        }
+       console.log(user);
+       
        req.user=user;
          next();
                   
