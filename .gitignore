@@ -6,9 +6,6 @@ backend/node_modules/
 frontend/build/
 backend/dist/
 
-# Environment files
-*.env
 
-# OS-specific files
-.DS_Store
-Thumbs.db
+backend/.env
+frontend/.env
