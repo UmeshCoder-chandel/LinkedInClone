@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React, { useState } from 'react'
+import { toast } from 'react-toastify'
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 
@@ -9,32 +10,47 @@ export const ImageModels = ({ isCircular, selfData, handleEditButton }) => {
 
 
   const handleInputImage = async (e) => {
-    const files = e.target.files;
-    const data = new FormData();
-    data.append("file", files[0])
+    // const files = e.target.files;
+    // const data = new FormData();
+    // data.append("file", files[0])
 
-    data.append("upload_preset", "linkdinClone")
-    setLoading(true)
-    try {
-      const res = await axios.post("https://api.cloudinary.com/v1_1/dcpb8lsmn/image/upload", data);
-      const imageUrl = res.data.url;
-      setImageLink(imageUrl);
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to upload image");
-    } finally {
-      setLoading(false)
-    }
+    // data.append("upload_preset", "linkdinClone")
+    // setLoading(true)
+    // try {
+    //   const res = await axios.post("https://api.cloudinary.com/v1_1/dcpb8lsmn/image/upload", data);
+    //   const imageUrl = res.data.data;
+    //   setImageLink(imageUrl);
+    // } catch (error) {
+    //   console.error(error);
+    //   toast.error("Failed to upload image");
+    // } finally {
+    //   setLoading(false)
+    // }
+    const files = e.target.files;
+    if (!files) return;
+   const data = new FormData();
+   data.append("file",files[0])
+
+   data.append("upload_preset","linkdinClone")
+   try {
+     const res = await axios.post("http://localhost:4000/api/upload", data);
+    const imageUrl = res.data?.data;
+    console.log(imageUrl);
+    setImageLink(imageUrl);
+   } catch (error) {
+     console.error(error);
+     toast.error("Failed to upload image");
+   }
 
   }
   const handleSubmit = async () => {
-    let { data } = { ...selfData }
+    const updatedUser = { ...selfData }
     if (isCircular) {
-      data = { ...data, ['profilePic']: imageLink }
+      updatedUser.profilePic = imageLink
     } else {
-      data = { ...data, ['coverPic']: imageLink }
+      updatedUser.coverPic = imageLink
     }
-    handleEditButton(data)
+    handleEditButton(updatedUser)
   }
 
 
@@ -66,8 +82,8 @@ export const ImageModels = ({ isCircular, selfData, handleEditButton }) => {
         <input onChange={handleInputImage} type="file" className="hidden" id="btn-submit" />
         {
           loading ?<Box sx={{ display: 'flex' }}>
-      <CircularProgress />
-    </Box> :<button onClick={handleSubmit} className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+          <CircularProgress />
+        </Box> :<button onClick={handleSubmit} className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
           Submit
         </button>
         }

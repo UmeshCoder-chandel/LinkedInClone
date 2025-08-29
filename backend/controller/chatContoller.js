@@ -42,9 +42,13 @@ export const AddChat=async (req,res) => {
 export const getChats = async (req,res) => {
 try {
     let userId=req.user._id;
-    let conversation=await Conversation.find({
+    let conversations=await Conversation.find({
         members:{$in:[userId]}
     }).populate("members","-password").sort({updatedAt:-1})
+    return res.status(200).json({
+        message:"fetched successfully",
+        conversations:conversations
+    })
 
 } catch (error) {
     res.status(500).json({message:"server error",error})

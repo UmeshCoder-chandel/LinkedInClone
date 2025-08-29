@@ -249,7 +249,7 @@ export const getPendingFriendList = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
         return res.status(200).json({
-            pendingFriends: pendingFriendsList.pending_friends
+            friends: pendingFriendsList.pending_friends
         })
 
     } catch (error) {

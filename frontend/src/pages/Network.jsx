@@ -25,7 +25,7 @@ export const Network = () => {
   const fetchPendingRequest = async () => {
     await axios.get("http://localhost:4000/api/user/pendingFriendsList", { withCredentials: true }).then(res => {
       console.log(res);
-      setData(res.data.friends)
+      setData(res.data.friends || [])
     }).catch(err => {
       console.log(err);
       alert("something  went wrong")
@@ -50,8 +50,8 @@ export const Network = () => {
           <button
             onClick={handleFriends}
             className={`px-4 py-2 rounded-full border border-white/30 transition-all duration-200 ${text === "Catch Up with Friends"
-                ? "bg-blue-600 text-white shadow-md"
-                : "bg-white/30 text-gray-700 hover:bg-white/50"
+              ? "bg-blue-600 text-white shadow-md"
+              : "bg-white/30 text-gray-700 hover:bg-white/50"
               }`}
           >
             Friends
@@ -59,8 +59,8 @@ export const Network = () => {
           <button
             onClick={handlePending}
             className={`px-4 py-2 rounded-full border border-white/30 transition-all duration-200 ${text === "Pending Requests"
-                ? "bg-blue-600 text-white shadow-md"
-                : "bg-white/30 text-gray-700 hover:bg-white/50"
+              ? "bg-blue-600 text-white shadow-md"
+              : "bg-white/30 text-gray-700 hover:bg-white/50"
               }`}
           >
             Pending Requests
@@ -70,23 +70,19 @@ export const Network = () => {
 
       {/* Profiles Grid */}
       <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {
-          data.map((item, index) => {
-            return (
-              <div className='md:w-[23%] h-[270px] sm:w-full'>
-                <ProfileCard data={item} />
-              </div>
-            );
-          })
-        }
-
-
-        {
-          data.length === 0 ? text === "Catch Up with Friends" ? <div>No any Friends Yet</div> : <div>No any Pending Friends yet</div> : null
-        }
-
-
+        {data.length > 0 ? (
+          data.map((item, index) => (
+            <ProfileCard key={index} data={item} />
+          ))
+        ) : (
+          <div className="col-span-full text-center text-gray-500 py-6">
+            {text === "Catch Up with Friends"
+              ? "No Friends Yet"
+              : "No Pending Friends Yet"}
+          </div>
+        )}
       </div>
+
     </div>
   )
 }

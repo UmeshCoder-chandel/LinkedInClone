@@ -10,11 +10,10 @@ const MessageModal = ({ selfData, userData }) => {
 
     try {
       setLoading(true);
-      const res = await axios.post("http://localhost:4000/api/chats/add-chat",{withCredentials:true} ,{
-        sender: selfData?._id,
+      await axios.post("http://localhost:4000/api/chats/add-chat", {
         recieverId: userData?._id,
         message: message,
-      });
+      }, { withCredentials: true });
     window.location.reload();
     } catch (err) {
       console.error("Error sending message", err);

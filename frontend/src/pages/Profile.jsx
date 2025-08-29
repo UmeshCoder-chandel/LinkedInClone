@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "../components/Card";
 import EditIcon from "@mui/icons-material/Edit";
 import { Advertisement } from "../components/Advertiement";
@@ -16,6 +16,7 @@ import assets from "../assets"
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import MessageModal from "../components/messageModal";
+import { CreateJobModal } from "../components/CreateJobModal";
 
 export const Profile = () => {
   const { id } = useParams();
@@ -26,7 +27,10 @@ export const Profile = () => {
   const [skillsModel, setSkillsModel] = useState(false);
   const [expModel, setExpModel] = useState(false);
   const [eduModel, setEduModel] = useState(false);
-  const [messageModal,setMessageModal]=useState(false)
+  const [messageModal, setMessageModal] = useState(false)
+
+  const [jobModal, setJobModal] = useState(false);
+  const handleJobModal = () => setJobModal((prev) => !prev);
 
   // handlers
   const handleSkillsModel = () => setSkillsModel((pre) => !pre);
@@ -35,7 +39,7 @@ export const Profile = () => {
   const handleInfoModel = () => setInfoModel((pre) => !pre);
   const handleAboutModel = () => setAboutModel((pre) => !pre);
   const handleImage = () => setImageModel((pre) => !pre);
-  const handleMessageModa=()=>setMessageModal((pre)=>!pre)
+  const handleMessageModal = () => setMessageModal((pre) => !pre)
   const handleCover = () => {
     setImageModel(true);
     setCircularImage(false);
@@ -56,7 +60,7 @@ export const Profile = () => {
     fetchDataOnLoad()
   }, [id])
 
-  
+
 
   const fetchDataOnLoad = async () => {
     try {
@@ -77,9 +81,10 @@ export const Profile = () => {
         localStorage.removeItem("userInfo");
       }
 
-      // console.log("User:", userDatas.data);
-      // console.log("Posts:", postDatas.data);
-      // console.log("Own:", ownDatas.data);
+      console.log("User:", userDatas.data);
+      console.log("Posts:", postDatas.data);
+      console.log("Own:", ownDatas.data);
+      // console.log(userData)
     } catch (error) {
       console.error("Profile fetch failed:", error);
       setUserData(null);
@@ -89,98 +94,103 @@ export const Profile = () => {
     }
   };
 
-  
-  const handleEditButton=async(data)=> {
-    await axios.put(`http://localhost:4000/api/user/update`,{user:data},{withCredentials:true}).then(res=>{
+
+  const handleEditButton = async (data) => {
+    await axios.put(`http://localhost:4000/api/user/update`, { user: data }, { withCredentials: true }).then(res => {
       window.location.reload();
-    }).catch(err=>{
+    }).catch(err => {
       console.log(err);
       alert("something went wrong")
     })
   }
 
-  const amIfriend =()=>{
-    let arr =userData?.friends?.filter(item=>{return item === ownData?._id})
+  const amIfriend = () => {
+    let arr = userData?.friends?.filter((item) => { return item === ownData?._id })
     return arr?.length;
   }
 
-  const isInPendingList=()=>{
-      let arr =userData?.pending_friends?.filter(item=>{return item === ownData?._id})
-    return arr?.length;
-
-  }
-
-  const ismyselfpendinglist=()=>{
-      let arr =userData?.pending_friends?.filter(item=>{return item === ownData?._id})
+  const isInPendingList = () => {
+    let arr = userData?.pending_friends?.filter(item => { return item === ownData?._id })
     return arr?.length;
 
   }
 
-  const  checkFriendStatus =()=>{
-    if(amIfriend()){
+  const ismyselfpendinglist = () => {
+    let arr = userData?.pending_friends?.filter((item) => { return item === ownData?._id })
+    return arr?.length;
+
+  }
+
+  const checkFriendStatus = () => {
+    if (amIfriend()) {
       return 'Disconnect'
-    }else if(ismyselfpendinglist()){
+    } else if (ismyselfpendinglist()) {
       return 'approve Request'
-    }else if(isInPendingList()){
+    } else if (isInPendingList()) {
       return 'Request Sent'
     }
-    else{
+    else {
       return "connect"
     }
   }
-  const handleSendFriend =async()=>{ 
- if(checkFriendStatus()==="Request Sent")return ;
- if(checkFriendStatus()==="connect") {
-  await axios.post('http://localhost:4000/api/user/sendFriendRequest',{friendId:userData?._id},{withCredentials:true}).then(res=>{
-    console.log(res);
-  toast.success(res.data.message)
-  setTimeout(()=>{
-    window.location.reload();
-  },2000)
- }).catch(err=>{
-  console.log(err);
-  toast.error(err?.response?.data?.error)
- })
 
-  }else if(checkFriendStatus()==="approve Request"){
-    await axios.post('http://localhost:4000/api/user/acceptFriendRequest',{friendId:userData?._id},{withCredentials:true}).then(res=>{
-      console.log(res);
-  toast.success(res.data.message)
-  setTimeout(()=>{
-    window.location.reload();
-  },2000)
-    }).catch(err=>{
-  console.log(err);
-  toast.error(err?.response?.data?.error)
-    })
 
-  }else if(checkFriendStatus()==="Disconnect"){
-        await axios.delete(`http://localhost:4000/api/user/removeFromFriendList/${userData?._id}`,{withCredentials:true}).then(res=>{
-          console.log(res);
-          toast.success(res.data.message)
-          setTimeout(()=>{
-            window.location.reload();
-          },2000)
-        }).catch(err=>{
-          console.log(err);
-          toast.error(err?.response?.data?.error)
-        })
-  }
-}
 
-const handleLogout= async()=>{
-       await axios.post(`http://localhost:4000/api/auth/logout`,{},{withCredentials:true}).then(res=>{
-        localStorage.clear();
-        window.location.reload();
-       }).catch(err=>{
+
+  const handleSendFriend = async () => {
+    if (checkFriendStatus() === "Request Sent") return;
+    if (checkFriendStatus() === "connect") {
+      await axios.post('http://localhost:4000/api/user/sendFriendReq', { reciever: userData?._id }, { withCredentials: true }).then(res => {
+        // console.log(res);
+        toast.success(res.data.message)
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000)
+      }).catch(err => {
         console.log(err);
         toast.error(err?.response?.data?.error)
-       })
-}
+      })
 
- const copytoshare = async () => {
+    } else if (checkFriendStatus() === "approve Request") {
+      await axios.post('http://localhost:4000/api/user/acceptFriendRequest', { friendId: userData?._id }, { withCredentials: true }).then(res => {
+        // console.log(res);
+        toast.success(res.data.message)
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000)
+      }).catch(err => {
+        // console.log(err);
+        toast.error(err?.response?.data?.error)
+      })
+
+    } else if (checkFriendStatus() === "Disconnect") {
+      await axios.delete(`http://localhost:4000/api/user/removeFromFriendList/${userData?._id}`, { withCredentials: true }).then(res => {
+        // console.log(res);
+        toast.success(res.data.message)
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000)
+      }).catch(err => {
+        console.log(err);
+        toast.error(err?.response?.data?.error)
+      })
+    }
+  }
+
+  const handleLogout = async () => {
+    await axios.post(`http://localhost:4000/api/auth/logout`, {}, { withCredentials: true }).then(res => {
+      localStorage.clear();
+      window.location.reload();
+    }).catch(err => {
+      console.log(err);
+      toast.error(err?.response?.data?.error)
+    })
+  }
+
+
+  const copytoshare = async () => {
     try {
-      let res = `http://localhost:5173/profile/${item?.user?._id}/activities/${item?._id}`
+      let res = `http://localhost:5173/profile/${id}`
       await navigator.clipboard.writeText(res);
       toast.success('copied to clipboard')
     } catch (err) {
@@ -203,6 +213,8 @@ const handleLogout= async()=>{
                     src={userData?.coverPic || assets.image}
                     alt="cover"
                     className="w-full h-[220px] object-cover"
+                    crossOrigin="anonymous"
+                    onError={(e) => { e.target.onerror = null; e.target.src = assets.image }}
                   />
                   {userData?._id === ownData?._id && <div
                     className="absolute cursor-pointer top-4 right-4 z-20 w-[35px] flex justify-center items-center h-[35px] rounded-full bg-white shadow-md hover:scale-110 transition"
@@ -220,6 +232,8 @@ const handleLogout= async()=>{
                       src={userData?.profilePic || assets.image}
                       alt="profile"
                       className="w-28 h-28 rounded-full border-4 border-white shadow-lg cursor-pointer hover:scale-105 transition"
+                      crossOrigin="anonymous"
+                      onError={(e) => { e.target.onerror = null; e.target.src = assets.image }}
                     />
                   </div>
                 </div>
@@ -260,14 +274,20 @@ const handleLogout= async()=>{
                       <Link to={'/view-resume'} className="cursor-pointer px-4 py-2 rounded-lg bg-blue-800 text-white font-semibold">Resume</Link>
                       <div onClick={copytoshare} className="cursor-pointer px-4 py-2 rounded-lg bg-blue-800 text-white font-semibold">Share</div>
                       {userData?._id === ownData?._id && <div onClick={handleLogout} className="cursor-pointer px-4 py-2 rounded-lg bg-blue-800 text-white font-semibold">LogOut</div>}
+                      {userData?._id === ownData?._id &&
+                        <div
+                          onClick={handleJobModal}
+                          className="cursor-pointer px-4 py-2 rounded-lg bg-blue-800 text-white font-semibold"
+                        >
+                          Your Hiring
+                        </div>
+                      }
 
-
-                     
-                       {amIfriend() && <div className="cursor-pointer px-4 py-2 rounded-lg bg-blue-800 text-white font-semibold">Message</div>}
-                     {userData?._id !== ownData?._id && <div className="cursor-pointer px-4 py-2 rounded-lg bg-blue-800 text-white font-semibold">{checkFriendStatus()}</div>}
+                      {amIfriend() && <div className="cursor-pointer px-4 py-2 rounded-lg bg-blue-800 text-white font-semibold" onClick={handleMessageModal}>Message</div>}
+                      {userData?._id !== ownData?._id && <div className="cursor-pointer px-4 py-2 rounded-lg bg-blue-800 text-white font-semibold" onClick={handleSendFriend}>{checkFriendStatus()}</div>}
                     </div>
                   </div>
-                </div>
+                 </div>
               </div>
             </Card>
           </div>
@@ -296,7 +316,7 @@ const handleLogout= async()=>{
             <Card padding={1}>
               <div className="flex justify-between items-center mb-2">
                 <h3 className="text-lg font-semibold">Skills</h3>
-               {userData?._id === ownData?._id &&  <div
+                {userData?._id === ownData?._id && <div
                   className="cursor-pointer hover:scale-110 transition"
                   onClick={handleSkillsModel}
                 >
@@ -313,9 +333,9 @@ const handleLogout= async()=>{
                       {skill}
                     </span>
                   ))
-                ) :(
-                  <p className="text-gray-500">No skills added yet</p>
-                )}
+                  ) : (
+                    <p className="text-gray-500">No skills added yet</p>
+                  )}
               </div>
             </Card>
           </div>
@@ -333,8 +353,8 @@ const handleLogout= async()=>{
                 {
                   postData.map((item, index) => {
                     return (
-                      <Link to={`/profile/${id}/activities/${item?._id}`} className="cursor-pointer shrink-0 w-[350px]">
-                        <PostCard profile={1} item={item}  personData={ownData} />
+                      <Link to={`/profile/${id}/activities/${item?._id}`} key={item?._id} className="cursor-pointer shrink-0 w-[350px]">
+                        <PostCard profile={1} item={item} personData={ownData} />
                       </Link>
                     )
                   })
@@ -342,9 +362,9 @@ const handleLogout= async()=>{
 
               </div>
               {
-                postData.length>5 && <div className="mt-4 text-center justify-center">
-            <Link to={`/profile/${id}/activities`} className="mt-4 px-4 py-2 hover:bg-gray-600 text rounded-md">Show More</Link>
-           </div>
+                postData.length > 5 && <div className="mt-4 text-center justify-center">
+                  <Link to={`/profile/${id}/activities`} className="mt-4 px-4 py-2 hover:bg-gray-600 text rounded-md">Show More</Link>
+                </div>
               }
             </Card>
           </div>
@@ -362,7 +382,7 @@ const handleLogout= async()=>{
                 {
                   userData?.experience.map((item, index) => {
                     return (
-                      <div className="p-3 border-t border-gray-200 flex justify-between items-start">
+                      <div key={item._id || item.title} className="p-3 border-t border-gray-200 flex justify-between items-start">
                         <div>
                           <div className="text-md font-medium">
                             {item.title}
@@ -375,13 +395,13 @@ const handleLogout= async()=>{
                         </div>
                         {
                           userData?._id === ownData?._id && <div
-                          className="cursor-pointer hover:scale-110 transition"
-                          onClick={handleExpModel}
+                            className="cursor-pointer hover:scale-110 transition"
+                            onClick={handleExpModel}
                           >
-                          <EditIcon fontSize="small" />
-                        </div>
-                        }
+                            <EditIcon fontSize="small" />
                           </div>
+                        }
+                      </div>
                     )
                   })
                 }
@@ -392,28 +412,28 @@ const handleLogout= async()=>{
           {/* Education */}
           <div className="mt-5">
             <Card padding={1}>
-          <div className="flex justify-between items-center mb-2">
-                 <h3 className="text-lg font-semibold">Education</h3>
-               </div>
-           {userData?.education?.length ? (
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="text-lg font-semibold">Education</h3>
+              </div>
+              {userData?.education?.length ? (
                 userData.education.map((edu, i) => (
-                  <div key={i} className="p-2">
+                  <div key={edu._id || i} className="p-2">
                     <h4 className="font-medium">{edu.school} </h4>
                     <p className="text-sm text-gray-600">{edu.degree} </p>
                     <p className="text-xs text-gray-500">{edu.startDate} - {edu.endDate} </p>
                     {userData?._id === ownData?._id && <div
-                          className="cursor-pointer hover:scale-110 transition"
-                          onClick={handleExpModel}
-                        >
-                          <EditIcon fontSize="small" />
-                        </div>}
+                      className="cursor-pointer hover:scale-110 transition"
+                      onClick={handleExpModel}
+                    >
+                      <EditIcon fontSize="small" />
+                    </div>}
                   </div>
-                  
+
                 ))
               ) : (
                 <p className="text-gray-500 text-sm">No education details</p>
               )}
-                          
+
             </Card>
           </div>
         </div>
@@ -429,42 +449,49 @@ const handleLogout= async()=>{
       {/* Image Modal */}
       {imageSetModel && (
         <Modal title={"Upload Image"} closeModel={handleImage}>
-          <ImageModels handleEditButton={handleEditButton}  selfData={ownData} isCircular={circularImage} />
+          <ImageModels handleEditButton={handleEditButton} selfData={ownData} isCircular={circularImage} />
         </Modal>
       )}
 
       {/* Info Modals */}
       {infoModel && (
         <Modal title="Edit Info" closeModel={handleInfoModel}>
-          <EditModel handleEditButton={handleEditButton}  selfData={ownData}/>
+          <EditModel handleEditButton={handleEditButton} selfData={ownData} />
         </Modal>
       )}
 
       {aboutModel && (
         <Modal title="About" closeModel={handleAboutModel}>
-          <AboutModel handleEditButton={handleEditButton}  selfData={ownData}/>
+          <AboutModel handleEditButton={handleEditButton} selfData={ownData} />
         </Modal>
       )}
       {skillsModel && (
         <Modal title="Skills" closeModel={handleSkillsModel}>
-          <SkillsModel handleEditButton={handleEditButton}  selfData={ownData} />
+          <SkillsModel handleEditButton={handleEditButton} selfData={ownData} />
         </Modal>
       )}
       {expModel && (
         <Modal title="Experience" closeModel={handleExpModel}>
-          <ExperisModel handleEditButton={handleEditButton}  selfData={ownData}/>
+          <ExperisModel handleEditButton={handleEditButton} selfData={ownData} />
         </Modal>
       )}
       {eduModel && (
         <Modal title="Education" closeModel={handleEduModel}>
-          <EducationModel handleEditButton={handleEditButton}  selfData={ownData} />
+          <EducationModel handleEditButton={handleEditButton} selfData={ownData} />
         </Modal>
       )}
       {
-    messageModal && <Modal title='send message' closeModel={handleMessageModal}>
-          <MessageModal selfData={ownData}  userData={userData}/>
+        messageModal && <Modal title='send message' closeModel={handleMessageModal}>
+          <MessageModal selfData={ownData} userData={userData} />
         </Modal>
       }
+
+      {jobModal && (
+        <Modal title="Create Job" closeModel={handleJobModal}>
+          <CreateJobModal closeModal={handleJobModal} />
+        </Modal>
+      )}
+
       <ToastContainer />
     </div>
   );

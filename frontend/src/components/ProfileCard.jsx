@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import assets from '../assets';
 
 const ProfileCard = (props) => {
-  // console.log(props.data);
+
   return (
     <Card padding={0}>
       {/* Banner */}
@@ -48,6 +48,7 @@ const ProfileCard = (props) => {
         </Link>
       </div>
     </Card>
+      
   )
 }
 

@@ -32,8 +32,8 @@ const handlePost=async()=>{
 
    data.append("upload_preset","linkdinClone")
    try {
-     const res = await axios.post("https://api.cloudinary.com/v1_1/dcpb8lsmn/image/upload", data);
-    const imageUrl = res.data.secure_url;
+     const res = await axios.post("http://localhost:4000/api/upload", data);
+    const imageUrl = res.data?.data;
     console.log(imageUrl);
     setImageUrl(imageUrl);
    } catch (error) {
