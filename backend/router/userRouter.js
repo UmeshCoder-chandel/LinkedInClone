@@ -1,10 +1,11 @@
 import express from 'express'
-import {updateUser,getUserbyId,getSuggestions, findUser, sendFriendRequest, acceptFriendRequest, removeFromFriend, getFriendsList, getPendingFriendList, getAllUser, rejectFriendRequest} from '../controller/userController.js';
+import {updateUser,updateResume,getUserbyId,getSuggestions, findUser, sendFriendRequest, acceptFriendRequest, removeFromFriend, getFriendsList, getPendingFriendList, getAllUser, rejectFriendRequest} from '../controller/userController.js';
 const router=express.Router();
 import auth from '../authentication/auth.js';
 
 
 router.put('/update',auth,updateUser)
+router.put('/resume',auth,updateResume)
 
 router.get('/friendsList',auth,getFriendsList)
 router.get('/',auth,getAllUser)

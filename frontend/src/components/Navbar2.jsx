@@ -47,6 +47,7 @@ const Navbar2 = () => {
         setSearchUser(filtered);
       } catch (error) {
         console.error("Error fetching users:", error);
+        setSearchUser([]);
       }
     };
 
@@ -54,15 +55,14 @@ const Navbar2 = () => {
   }, [debounceTerm]);
 
   const fetchNotification = async () => {
-    await axios.get(`https://linkedinclone-backend-i2bq.onrender.com/api/notifications/activeNotification`, { withCredentials: true }).then(res => {
-      // console.log(res.data.count)
-      var count = res.data.count;
-      setNotificationCount(count)
-    }).catch(err => {
+    try {
+      const res = await axios.get(`https://linkedinclone-backend-i2bq.onrender.com/api/notifications/activeNotification`, { withCredentials: true });
+      const count = res.data.count;
+      setNotificationCount(count);
+    } catch (err) {
       console.log(err);
-
-    })
-
+      setNotificationCount(0);
+    }
   }
 
   useEffect(() => {
@@ -70,6 +70,12 @@ const Navbar2 = () => {
     setUserData(userData ? JSON.parse(userData) : null)
 
     fetchNotification()
+    
+    // Cleanup function
+    return () => {
+      setSearchUser([]);
+      setNotificationCount(0);
+    }
   }, [])
 
   return (
@@ -90,22 +96,29 @@ const Navbar2 = () => {
 
           {/* Search Bar (hidden on mobile) */}
           
-          <div className=" md:block relative">
+          <div className="md:block relative">
             <input
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              onBlur={() => {
+                // Clear search results after a delay to allow clicking on results
+                setTimeout(() => setSearchUser([]), 200);
+              }}
               placeholder="Search"
               className="w-72 bg-white/30 backdrop-blur-md rounded-lg h-9 px-4 text-sm placeholder-gray-600 outline-none focus:ring-2 focus:ring-blue-400"
             />
 
             {searchUser.length > 0 && debounceTerm.length !== 0 && (
-              <div className="absolute top-full left-0 mt-1 w-72 bg-white rounded-lg shadow-lg z-50 overflow-hidden">
+              <div className="absolute top-full left-0 mt-1 w-72 bg-white rounded-lg shadow-lg z-50 overflow-hidden border border-gray-200">
                 {searchUser.map((item, index) => (
                   <Link
                     to={`/profile/${item?._id}`}
-                    key={index}
-                    onClick={() => setSearchTerm("")}
-                    className="flex items-center px-3 py-2 hover:bg-blue-100 transition"
+                    key={item._id || index}
+                    onClick={() => {
+                      setSearchTerm("");
+                      setSearchUser([]);
+                    }}
+                    className="flex items-center px-3 py-2 hover:bg-blue-100 transition-colors"
                   >
                     <img
                       src={item?.profilePic || assets.image}
@@ -181,7 +194,8 @@ const Navbar2 = () => {
         <div className="md:hidden">
           <button
             onClick={() => setMobileMenu(!mobileMenu)}
-            className="p-2 rounded-lg hover:bg-white/30 transition"
+            className="p-2 rounded-lg hover:bg-white/30 transition-colors"
+            aria-label={mobileMenu ? "Close menu" : "Open menu"}
           >
             {mobileMenu ? <CloseIcon /> : <MenuIcon />}
           </button>
@@ -190,13 +204,49 @@ const Navbar2 = () => {
 
       {/* Mobile Dropdown */}
       {mobileMenu && (
-        <div className="md:hidden backdrop-blur-lg bg-white/70 shadow-md px-5 py-4 flex flex-col gap-4 rounded-b-xl">
-          <Link to="/home" onClick={() => setMobileMenu(false)}>Home</Link>
-          <Link to="/network" onClick={() => setMobileMenu(false)}>My Network</Link>
-          <Link to="/jobs" onClick={() => setMobileMenu(false)}>Jobs</Link>
-          <Link to="/messages" onClick={() => setMobileMenu(false)}>Messaging</Link>
-          <Link to="/notifications" onClick={() => setMobileMenu(false)}>Notifications</Link>
-          <Link to={`/profile/${userData?._id}`} onClick={() => setMobileMenu(false)}>Me</Link>
+        <div className="md:hidden backdrop-blur-lg bg-white/70 shadow-md px-5 py-4 flex flex-col gap-4 rounded-b-xl border-t border-white/30">
+          <Link 
+            to="/home" 
+            onClick={() => setMobileMenu(false)}
+            className="py-2 px-3 rounded-lg hover:bg-white/30 transition-colors"
+          >
+            Home
+          </Link>
+          <Link 
+            to="/network" 
+            onClick={() => setMobileMenu(false)}
+            className="py-2 px-3 rounded-lg hover:bg-white/30 transition-colors"
+          >
+            My Network
+          </Link>
+          <Link 
+            to="/jobs" 
+            onClick={() => setMobileMenu(false)}
+            className="py-2 px-3 rounded-lg hover:bg-white/30 transition-colors"
+          >
+            Jobs
+          </Link>
+          <Link 
+            to="/messages" 
+            onClick={() => setMobileMenu(false)}
+            className="py-2 px-3 rounded-lg hover:bg-white/30 transition-colors"
+          >
+            Messaging
+          </Link>
+          <Link 
+            to="/notification" 
+            onClick={() => setMobileMenu(false)}
+            className="py-2 px-3 rounded-lg hover:bg-white/30 transition-colors"
+          >
+            Notifications
+          </Link>
+          <Link 
+            to={`/profile/${userData?._id}`} 
+            onClick={() => setMobileMenu(false)}
+            className="py-2 px-3 rounded-lg hover:bg-white/30 transition-colors"
+          >
+            Me
+          </Link>
         </div>
       )}
     </nav>

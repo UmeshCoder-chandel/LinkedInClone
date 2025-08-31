@@ -6,7 +6,7 @@ export const updateUser = async (req, res) => {
         const { user } = req.body;
         const isuser = await User.findById(req.user._id);
         if (!isuser) {
-            res.status(400).json("user does not exist")
+            return res.status(400).json("user does not exist")
         }
         const updatedata = await User.findByIdAndUpdate(isuser._id, user)
         // console.log(updatedata);
@@ -17,6 +17,34 @@ export const updateUser = async (req, res) => {
 
     }
 
+}
+
+export const updateResume = async (req, res) => {
+    try {
+        const { resumeUrl } = req.body;
+        
+        if (!resumeUrl) {
+            return res.status(400).json({ message: "Resume URL is required" });
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(
+            req.user._id,
+            { resume: resumeUrl },
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json({ 
+            message: "Resume updated successfully", 
+            user: updatedUser 
+        });
+    } catch (error) {
+        console.error("Resume update error:", error);
+        res.status(500).json({ message: "Failed to update resume", error: error.message });
+    }
 }
 
 export const getAllUser=async(req,res)=>{

@@ -45,7 +45,7 @@ function App(){
         <Route path="/jobs" element={islogin?<Jobs/>:<Navigate to={'/login'}/>} />
         <Route path="/jobs/apply/:jobId" element={islogin?<JobApplication/>:<Navigate to={'/login'}/>} />
         <Route path="/notification" element={islogin?<Notification />:<Navigate to={'/login'}/>} />
-        {/* <Route path="/view-resume" element={islogin?<ViewResume />:<Navigate to={'/login'}/>} /> */}
+        <Route path="/view-resume" element={islogin?<ViewResume />:<Navigate to={'/login'}/>} />
         <Route path='/profile/:id' element={islogin?<Profile />:<Navigate to={'/login'}/>} />
          <Route path='/profile/:id/activities' element={islogin?<AllActivities /> : <Navigate to={'/login'}/>} />
 

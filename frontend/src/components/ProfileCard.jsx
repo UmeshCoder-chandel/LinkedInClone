@@ -2,6 +2,7 @@ import React from 'react'
 import Card from './Card'
 import { Link } from 'react-router-dom'
 import assets from '../assets';
+import ResumeButton from './ResumeButton';
 
 const ProfileCard = (props) => {
 
@@ -41,15 +42,29 @@ const ProfileCard = (props) => {
           {props?.data?.location}
         </p>
 
-        {/* Glass button for action */}
-        <Link to={`/profile/${props.data?._id}`}
-          className="px-5 py-2 mt-2 rounded-2xl font-semibold text-white 
-            bg-gradient-to-r from-blue-500/80 to-blue-700/80 
-            backdrop-blur-md shadow-md hover:from-blue-600/90 hover:to-blue-800/90 
-            transition-all duration-300"
-        >
-          View Profile
-        </Link>
+        {/* Action Buttons */}
+        <div className="flex gap-2 mt-2">
+          <Link to={`/profile/${props.data?._id}`}
+            className="px-5 py-2 rounded-2xl font-semibold text-white 
+              bg-gradient-to-r from-blue-500/80 to-blue-700/80 
+              backdrop-blur-md shadow-md hover:from-blue-600/90 hover:to-blue-800/90 
+              transition-all duration-300"
+          >
+            View Profile
+          </Link>
+          
+          {/* Resume Button */}
+          <ResumeButton 
+            resumeUrl={props.data?.resume}
+            fileName={`${props.data?.name}'s Resume`}
+            className="px-5 py-2 rounded-2xl font-semibold text-white 
+              bg-gradient-to-r from-green-500/80 to-green-700/80 
+              backdrop-blur-md shadow-md hover:from-green-600/90 hover:to-green-800/90 
+              transition-all duration-300"
+          >
+            Resume
+          </ResumeButton>
+        </div>
       </div>
     </Card>
 

@@ -79,7 +79,14 @@ export default function Messages() {
       socket.on("receiveMessage", (newMessage) => {
         console.log("Received new message:", newMessage);
         if (newMessage.conversation === activeCover) {
-          setMessages(prev => [...prev, newMessage]);
+          // Check if this message is not already in the messages array
+          setMessages(prev => {
+            const messageExists = prev.some(msg => msg._id === newMessage._id);
+            if (!messageExists) {
+              return [...prev, newMessage];
+            }
+            return prev;
+          });
         }
       });
 
@@ -177,14 +184,11 @@ export default function Messages() {
       const res = await axios.post(`https://linkedinclone-backend-i2bq.onrender.com/api/messages`, messageData, { withCredentials: true });
       console.log(res.data);
 
-      // Add the new message to the messages array
-      setMessages(prev => [...prev, res.data]);
-      
       // Clear the input fields
       setMessageText("");
       setImageLink(null);
       
-      // Emit socket event for real-time messaging
+      // Emit socket event for real-time messaging (this will trigger receiveMessage for other users)
       if (socket) {
         socket.emit("sendMessage", res.data);
       }

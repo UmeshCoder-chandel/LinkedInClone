@@ -18,6 +18,7 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import MessageModal from "../components/messageModal";
 import { CreateJobModal } from "../components/CreateJobModal";
+import ResumeButton from "../components/ResumeButton";
 
 export const Profile = () => {
   const { id } = useParams();
@@ -300,9 +301,13 @@ export const Profile = () => {
                       {userData?.friends?.length || 0} Connections
                     </div>
                     <div className="my-5 flex gap-5 flex-wrap">
-                      <Link to={'/view-resume'} className="cursor-pointer px-4 py-2 rounded-lg bg-blue-800 text-white font-semibold hover:bg-blue-900 transition">
+                      <ResumeButton 
+                        resumeUrl={userData?.resume}
+                        fileName={`${userData?.name}'s Resume`}
+                        className="px-4 py-2 rounded-lg bg-blue-800 text-white font-semibold hover:bg-blue-900 transition"
+                      >
                         Resume
-                      </Link>
+                      </ResumeButton>
                       <div 
                         onClick={copytoshare} 
                         className="cursor-pointer px-4 py-2 rounded-lg bg-blue-800 text-white font-semibold hover:bg-blue-900 transition"
