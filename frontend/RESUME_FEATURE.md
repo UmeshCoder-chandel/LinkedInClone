@@ -167,6 +167,10 @@ Body:
 - File not found
 - Unsupported format
 - Loading failures
+- **Cloudinary 401 Errors**: If you see "Failed to load resource: the server responded with a status of 401", this means:
+  - The Cloudinary URL has expired
+  - File permissions are restricted
+  - Use the download option instead of preview
 
 ### User Feedback
 - Toast notifications

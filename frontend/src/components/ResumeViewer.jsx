@@ -1,8 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import assets from "../assets";
 
 const ResumeViewer = ({ resumeUrl, fileName, onClose }) => {
   const [viewMode, setViewMode] = useState("embed"); // "embed", "download", "preview"
+  const [pdfError, setPdfError] = useState(false);
+
+  useEffect(() => {
+    // Reset PDF error state when resume URL changes
+    setPdfError(false);
+    
+    // Set a timeout to detect PDF loading issues
+    if (getFileType(resumeUrl) === 'pdf') {
+      const timer = setTimeout(() => {
+        // If PDF hasn't loaded in 5 seconds, show error
+        setPdfError(true);
+      }, 5000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [resumeUrl]);
 
   if (!resumeUrl) {
     return (
@@ -35,6 +51,10 @@ const ResumeViewer = ({ resumeUrl, fileName, onClose }) => {
   };
 
   const fileType = getFileType(resumeUrl);
+
+  const handlePdfError = () => {
+    setPdfError(true);
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -92,13 +112,40 @@ const ResumeViewer = ({ resumeUrl, fileName, onClose }) => {
         {/* Content */}
         <div className="p-4">
           {viewMode === "embed" && (
-            <div className="w-full h-[70vh] border rounded-lg overflow-hidden">
+            <div className="w-full h-[70vh] border rounded-lg overflow-hidden relative">
               {fileType === 'pdf' ? (
-                <iframe
-                  src={resumeUrl}
-                  className="w-full h-full"
-                  title="Resume PDF"
-                />
+                <>
+                  {!pdfError ? (
+                    <iframe
+                      src={resumeUrl}
+                      className="w-full h-full"
+                      title="Resume PDF"
+                      onError={handlePdfError}
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center h-full bg-gray-50">
+                      <div className="text-center">
+                        <div className="text-gray-400 mb-4">
+                          <svg className="mx-auto h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                        </div>
+                        <p className="text-gray-600 mb-4">PDF preview not available</p>
+                        <p className="text-sm text-gray-500 mb-4">The file may be restricted, expired, or unavailable for preview. Try downloading instead.</p>
+                        <a
+                          href={resumeUrl}
+                          download
+                          className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+                        >
+                          <svg className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          Download Resume
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                </>
               ) : (
                 <div className="flex items-center justify-center h-full bg-gray-50">
                   <div className="text-center">
@@ -114,7 +161,7 @@ const ResumeViewer = ({ resumeUrl, fileName, onClose }) => {
                       className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
                     >
                       <svg className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
                       Download Resume
                     </a>
@@ -128,7 +175,7 @@ const ResumeViewer = ({ resumeUrl, fileName, onClose }) => {
             <div className="text-center py-12">
               <div className="text-gray-400 mb-6">
                 <svg className="mx-auto h-24 w-24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
               <h3 className="text-xl font-medium text-gray-900 mb-4">Download Resume</h3>
@@ -139,7 +186,7 @@ const ResumeViewer = ({ resumeUrl, fileName, onClose }) => {
                 className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-lg"
               >
                 <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
                 Download Resume
               </a>
