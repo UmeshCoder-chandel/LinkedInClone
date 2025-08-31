@@ -10,5 +10,8 @@ export default defineConfig({
       "Cross-Origin-Opener-Policy": "same-origin",
       "Cross-Origin-Embedder-Policy": "require-corp"
     }
-  }
+  },
+   build: {
+    chunkSizeWarningLimit: 1600, // increase limit (kb)
+  },
 })
