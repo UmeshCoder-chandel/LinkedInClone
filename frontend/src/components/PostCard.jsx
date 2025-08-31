@@ -98,13 +98,13 @@ export default function PostCard({ profile, item, personData }) {
     }
   }
 
- const handleDeleteClick=async()=>{
-await axios.delete(`http://localhost:4000/api/posts/${item?._id}`,{withCredentials:true}).then(res=>{
-  toast.success("post deleted successfully")
-}).catch(err=>{
-  toast.error("failed to delete post")
-})
- }
+  const handleDeleteClick = async () => {
+    await axios.delete(`http://localhost:4000/api/posts/${item?._id}`, { withCredentials: true }).then(res => {
+      toast.success("post deleted successfully")
+    }).catch(err => {
+      toast.error("failed to delete post")
+    })
+  }
 
   return (
     // <Card padding={0}>
@@ -256,151 +256,159 @@ await axios.delete(`http://localhost:4000/api/posts/${item?._id}`,{withCredentia
     // </Card>
 
 
-<Card className="w-full sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto my-4 shadow-sm rounded-lg overflow-hidden">
-  {/* Header */}
-  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 gap-3">
-    <div className="flex items-center gap-3 w-full sm:w-auto">
-      <img
-        className="w-12 h-12 rounded-full border border-gray-200 cursor-pointer hover:scale-105 transition"
-        src={item?.user?.profilePic || assets.image}
-        alt="profile"
-      />
-      <div className="truncate">
-        <div className="font-semibold text-base truncate">{item?.user?.name}</div>
-        <div className="text-gray-500 text-sm truncate">{item?.user?.headline}</div>
-      </div>
-    </div>
+    <Card className="w-full sm:max-w-md md:max-w-lg lg:max-w-xl mx-auto my-4 shadow-sm rounded-lg overflow-hidden">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 gap-3">
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <img
+            className="w-12 h-12 rounded-full border border-gray-200 cursor-pointer hover:scale-105 transition"
+            src={item?.user?.profilePic || assets.image}
+            alt="profile"
+            crossOrigin="anonymous"
+            onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = assets.image }}
+          />
+          <div className="truncate">
+            <div className="font-semibold text-base truncate">{item?.user?.name}</div>
+            <div className="text-gray-500 text-sm truncate">{item?.user?.headline}</div>
+          </div>
+        </div>
 
-    {personData?._id === item?.user?._id && (
-      <div className="relative mt-2 sm:mt-0">
-        <MoreHorizIcon
-          className="cursor-pointer text-gray-600 hover:bg-gray-200 p-1 rounded-full"
-          onClick={() => setMenuOpen((prev) => !prev)}
-        />
-        {menuOpen && (
-          <div className="absolute right-0 mt-2 w-36 bg-white shadow-md border rounded-md z-50">
-            <button
-              className="w-full text-left px-4 py-2 hover:bg-red-600 hover:text-white transition"
-              onClick={handleDeleteClick}
-            >
-              Delete Post
-            </button>
+        {personData?._id === item?.user?._id && (
+          <div className="relative mt-2 sm:mt-0">
+            <MoreHorizIcon
+              className="cursor-pointer text-gray-600 hover:bg-gray-200 p-1 rounded-full"
+              onClick={() => setMenuOpen((prev) => !prev)}
+            />
+            {menuOpen && (
+              <div className="absolute right-0 mt-2 w-36 bg-white shadow-md border rounded-md z-50">
+                <button
+                  className="w-full text-left px-4 py-2 hover:bg-red-600 hover:text-white transition"
+                  onClick={handleDeleteClick}
+                >
+                  Delete Post
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
-    )}
-  </div>
 
-  {/* Description */}
-  <div className="px-4 pb-4 text-gray-700 text-sm leading-relaxed break-words">
-    {seeMore ? desc : desc?.length > 100 ? `${desc.slice(0, 100)}...` : desc}{" "}
-    {desc?.length > 100 && (
-      <span
-        className="text-blue-600 cursor-pointer hover:underline"
-        onClick={() => setSeeMore((prev) => !prev)}
-      >
-        {seeMore ? "See Less" : "See More"}
-      </span>
-    )}
-  </div>
-
-  {/* Post Image */}
-  {item?.image && (
-    <div className="w-full overflow-hidden">
-      <img
-        className="w-full h-auto object-cover rounded-md"
-        src={item?.image}
-        alt="post"
-      />
-    </div>
-  )}
-
-  {/* Likes / Comments */}
-  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center px-4 py-2 text-sm text-gray-600 border-t border-gray-200 gap-2 sm:gap-0">
-    <div className="flex items-center gap-2">
-      <FaRegThumbsUp className="text-blue-500" /> {noOfLikes} Likes
-    </div>
-    <div
-      className="flex items-center gap-2 cursor-pointer hover:text-blue-500"
-      onClick={handleCommentBox}
-    >
-      <FaRegCommentDots /> {comments.length} Comments
-    </div>
-  </div>
-
-  {/* Action Buttons */}
-  {!profile && (
-    <div className="flex flex-wrap sm:flex-nowrap border-t border-gray-200 text-gray-600">
-      <div
-        onClick={handleLikeFunc}
-        className="flex-1 flex justify-center items-center gap-2 py-2 cursor-pointer hover:bg-gray-100"
-      >
-        {liked ? <FaThumbsUp /> : <FaRegThumbsUp />}
-        <span>{liked ? "Liked" : "Like"}</span>
+      {/* Description */}
+      <div className="px-4 pb-4 text-gray-700 text-sm leading-relaxed break-words">
+        {seeMore ? desc : desc?.length > 100 ? `${desc.slice(0, 100)}...` : desc}{" "}
+        {desc?.length > 100 && (
+          <span
+            className="text-blue-600 cursor-pointer hover:underline"
+            onClick={() => setSeeMore((prev) => !prev)}
+          >
+            {seeMore ? "See Less" : "See More"}
+          </span>
+        )}
       </div>
-      <div
-        onClick={handleCommentBox}
-        className="flex-1 flex justify-center items-center gap-2 py-2 cursor-pointer hover:bg-gray-100"
-      >
-        <FaRegCommentDots /> <span>Comment</span>
-      </div>
-      <div
-        onClick={copytoshare}
-        className="flex-1 flex justify-center items-center gap-2 py-2 cursor-pointer hover:bg-gray-100"
-      >
-        <FaShare /> <span>Share</span>
-      </div>
-    </div>
-  )}
 
-  {/* Comments Section */}
-  {comment && (
-    <div className="p-4 bg-gray-50 border-t border-gray-100">
-      <div className="flex gap-2 items-center">
-        <img
-          className="w-10 h-10 rounded-full border border-gray-200"
-          src={personData?.profilePic || assets.image}
-          alt="profile"
-        />
-        <form className="flex w-full gap-2" onSubmit={handleComment}>
-          <input
-            value={commentText}
-            onChange={(e) => setCommentText(e.target.value)}
-            placeholder="Add a comment..."
-            className="flex-grow border rounded-full py-2 px-4 text-sm focus:ring focus:ring-blue-300"
+      {/* Post Image */}
+      {item?.image && (
+        <div className="w-full overflow-hidden">
+          <img
+            className="w-full h-auto object-cover rounded-md"
+            src={item?.image}
+            alt="post"
+            crossOrigin="anonymous"
+            onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = assets.image }}
           />
-          <button
-            type="submit"
-            className="px-4 py-1 rounded-full bg-blue-500 text-white text-sm"
-          >
-            Send
-          </button>
-        </form>
+        </div>
+      )}
+
+      {/* Likes / Comments */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center px-4 py-2 text-sm text-gray-600 border-t border-gray-200 gap-2 sm:gap-0">
+        <div className="flex items-center gap-2">
+          <FaRegThumbsUp className="text-blue-500" /> {noOfLikes} Likes
+        </div>
+        <div
+          className="flex items-center gap-2 cursor-pointer hover:text-blue-500"
+          onClick={handleCommentBox}
+        >
+          <FaRegCommentDots /> {comments.length} Comments
+        </div>
       </div>
 
-      <div className="mt-4 space-y-3">
-        {comments.map((c, index) => (
-          <Link
-            key={index}
-            to={`/profile/${c?.user?._id}`}
-            className="flex gap-3 hover:bg-gray-100 p-2 rounded-md transition"
+      {/* Action Buttons */}
+      {!profile && (
+        <div className="flex flex-wrap sm:flex-nowrap border-t border-gray-200 text-gray-600">
+          <div
+            onClick={handleLikeFunc}
+            className="flex-1 flex justify-center items-center gap-2 py-2 cursor-pointer hover:bg-gray-100"
           >
+            {liked ? <FaThumbsUp /> : <FaRegThumbsUp />}
+            <span>{liked ? "Liked" : "Like"}</span>
+          </div>
+          <div
+            onClick={handleCommentBox}
+            className="flex-1 flex justify-center items-center gap-2 py-2 cursor-pointer hover:bg-gray-100"
+          >
+            <FaRegCommentDots /> <span>Comment</span>
+          </div>
+          <div
+            onClick={copytoshare}
+            className="flex-1 flex justify-center items-center gap-2 py-2 cursor-pointer hover:bg-gray-100"
+          >
+            <FaShare /> <span>Share</span>
+          </div>
+        </div>
+      )}
+
+      {/* Comments Section */}
+      {comment && (
+        <div className="p-4 bg-gray-50 border-t border-gray-100">
+          <div className="flex gap-2 items-center">
             <img
-              className="w-8 h-8 rounded-full border border-gray-200"
-              src={c?.user?.profilePic || assets.image}
-              alt="comment-user"
+              className="w-10 h-10 rounded-full border border-gray-200"
+              src={personData?.profilePic || assets.image}
+              alt="profile"
+              crossOrigin="anonymous"
+              onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = assets.image }}
             />
-            <div>
-              <div className="text-sm font-semibold truncate">{c?.user?.name}</div>
-              <div className="text-xs text-gray-500 truncate">{c?.user?.headline}</div>
-              <p className="text-sm mt-1 break-words">{c?.comment}</p>
-            </div>
-          </Link>
-        ))}
-      </div>
-    </div>
-  )}
-</Card>
+            <form className="flex w-full gap-2" onSubmit={handleComment}>
+              <input
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                placeholder="Add a comment..."
+                className="flex-grow border rounded-full py-2 px-4 text-sm focus:ring focus:ring-blue-300"
+              />
+              <button
+                type="submit"
+                className="px-4 py-1 rounded-full bg-blue-500 text-white text-sm"
+              >
+                Send
+              </button>
+            </form>
+          </div>
+
+          <div className="mt-4 space-y-3">
+            {comments.map((c, index) => (
+              <Link
+                key={index}
+                to={`/profile/${c?.user?._id}`}
+                className="flex gap-3 hover:bg-gray-100 p-2 rounded-md transition"
+              >
+                <img
+                  className="w-8 h-8 rounded-full border border-gray-200"
+                  src={c?.user?.profilePic || assets.image}
+                  alt="comment-user"
+                  crossOrigin="anonymous"
+                  onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = assets.image }}
+                />
+                <div>
+                  <div className="text-sm font-semibold truncate">{c?.user?.name}</div>
+                  <div className="text-xs text-gray-500 truncate">{c?.user?.headline}</div>
+                  <p className="text-sm mt-1 break-words">{c?.comment}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+    </Card>
 
 
   );

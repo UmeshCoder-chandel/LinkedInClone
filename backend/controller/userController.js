@@ -46,15 +46,25 @@ export const getUserbyId = async (req, res) => {
 
 export const getSuggestions = async (req, res) => {
     try {
-        const user = await User.findById(req.user._id).select("connections");
-        const suggestions = await User.find({ _id: { $ne: req.user._id, $nin: user.connections } }).select("name,profilePic,headline").limit(5);
-        res.status(200).json(suggestions);
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        
+        // Get users who are not the current user and not in friends or pending_friends
+        const suggestions = await User.find({ 
+            _id: { 
+                $ne: req.user._id, 
+                $nin: [...user.friends, ...user.pending_friends] 
+            } 
+        })
+        .select("name profilePic headline location")
+        .limit(10);
+        
+        res.status(200).json({ suggestions });
     } catch (error) {
         res.status(500).json({ message: "server error", error: error.message });
-
-
     }
-
 };
 
 
@@ -258,3 +268,36 @@ export const getPendingFriendList = async (req, res) => {
 
     }
 }
+
+export const rejectFriendRequest = async (req, res) => {
+    try {
+        const { friendId } = req.params;
+        const selfId = req.user._id;
+
+        const friendData = await User.findById(friendId);
+        if (!friendData) {
+            return res.status(400).json({ error: "User not found" });
+        }
+
+        // Remove from pending_friends of current user
+        const selfIndex = req.user.pending_friends.findIndex(id => id.equals(friendId));
+        if (selfIndex !== -1) {
+            req.user.pending_friends.splice(selfIndex, 1);
+        }
+
+        // Remove from pending_friends of friend
+        const friendIndex = friendData.pending_friends.findIndex(id => id.equals(selfId));
+        if (friendIndex !== -1) {
+            friendData.pending_friends.splice(friendIndex, 1);
+        }
+
+        await req.user.save();
+        await friendData.save();
+
+        return res.status(200).json({
+            message: "Friend request rejected successfully"
+        });
+    } catch (error) {
+        res.status(500).json({ message: "server error", error: error.message });
+    }
+};

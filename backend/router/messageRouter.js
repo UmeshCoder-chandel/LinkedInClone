@@ -5,6 +5,7 @@ import {
   getConversation,
   getRecentChats,
   markAsRead,
+  getMessagesByConversation,
 } from "../controller/messageController.js";
 
 const router = express.Router();
@@ -12,6 +13,7 @@ const router = express.Router();
 router.post("/", auth, sendMessage);                // send a message
 router.get("/chats", auth, getRecentChats);         // list of recent chats
 router.get("/:userId", auth, getConversation);      // conversation with user
+router.get("/conversation/:conversationId", auth, getMessagesByConversation); // messages by conversation ID
 router.put("/:userId/read", auth, markAsRead);      // mark messages as read
 
 export default router;

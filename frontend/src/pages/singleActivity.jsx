@@ -16,12 +16,17 @@ const SingleActivity = () => {
   const fetchDataOnLoad = async () => {
     try {
       // fetch the post details
-      const postRes = await axios.get(`http://localhost:4000/api/posts/${postId}`);
-      setPost(postRes.data.post);
+      const postRes = await axios.get(`http://localhost:4000/api/posts/${postId}`,{withCredentials:true});
+      setPost(postRes.data);
 
       // fetch the profile details of this user
-      const userRes = await axios.get(`http://localhost:4000/api/user/${id}`);
-      setUserData(userRes.data);
+      const userRes = await axios.get(`http://localhost:4000/api/user/${id}`,{withCredentials:true});
+      setUserData(userRes.data.user);
+
+
+      // console.log(userRes.data.user);
+      console.log(postRes.data);
+      
     } catch (err) {
       console.error("Error fetching post details", err);
     }
@@ -37,7 +42,7 @@ const SingleActivity = () => {
     <div className="px-5 xl:px-50 py-9 flex gap-5 w-full mt-5 bg-gray-100">
       {/* left side */}
       <div className="w-[21%] sm:block sm:w-[23%] hidden py-5">
-        {userData && <ProfileCard data={post?.user} />}
+        {userData && <ProfileCard data={userData} />}
       </div>
 
       {/* middle side */}

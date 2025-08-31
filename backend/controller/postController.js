@@ -1,5 +1,6 @@
 import Notification from "../models/notification.js";
 import Post from "../models/post.js";
+import cloudinary from "../config/cloudinary.js";
 
 
 const createPost=async(req,res)=>{
@@ -21,7 +22,7 @@ const createPost=async(req,res)=>{
 
 const getfeedPost=async (req,res) => {
     try {
-        const post=await Post.find().sort({createdAt:-1}).populate("user",'name profilePicture headline');
+        const post=await Post.find().sort({createdAt:-1}).populate("user",'name profilePic headline');
         res.status(200).json(post);
         console.log(post)
     } catch (error) {
@@ -34,7 +35,7 @@ const getfeedPost=async (req,res) => {
 const getPostById=async (req,res) => {
    try {
        const postId=req.params.id;
-       const post=await Post.findById(postId).populate("user",'name profilePicture headline')
+       const post=await Post.findById(postId).populate("user",'name profilePic headline')
     //    .populate("comments.user","name profilePicture headline");
        if(!post){
                console.log("Post not found:", postId);
@@ -59,8 +60,18 @@ const deletePost=async (req,res) => {
         if(post.user.toString()!==userId.toString()){
             return res.status(403).json("you are not authorized to delete")
         }
-        if(post.image){
-            await cloudinary.uploader.destory(post.image.split('/').pop().split(".")[0])
+        if (post.image) {
+            try {
+                // Extract public_id from a URL like:
+                // https://res.cloudinary.com/<cloud>/image/upload/v12345/folder/name.ext
+                const urlParts = post.image.split("/");
+                const fileWithExt = urlParts[urlParts.length - 1];
+                const publicId = fileWithExt.substring(0, fileWithExt.lastIndexOf("."));
+                await cloudinary.uploader.destroy(publicId);
+            } catch (e) {
+                // Continue even if image deletion fails
+                console.error("Cloudinary destroy failed:", e?.message || e);
+            }
         }
         await Post.findByIdAndDelete(postId);
         res.status(200).json("post deleted successfully")
@@ -75,7 +86,7 @@ const createComment=async (req,res) => {
         const {text}=req.body;
         const post=await Post.findByIdAndUpdate(postId,{
             $push:{comments:{user:req.user._id,text}}
-        },{new:true}).populate("author","name profilePicture headline");
+        },{new:true}).populate("author","name profilePic headline");
          
         if(post.author._id.toString()!==req.user._id.toString()){
             const newNoti=new Notification({

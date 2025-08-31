@@ -13,9 +13,19 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 import cookies from 'cookie-parser'
 import auth from './authentication/auth.js'
+import {Server} from 'socket.io'
+import http from 'http'
 dotenv.config()
 const app=express()
 connectDB();
+
+const server = http.createServer(app)
+const io = new Server(server,{
+    cors:{
+        origin:"http://localhost:5173",
+        method:['GET','POST']
+    }
+})
 
 app.use(cors({
     credentials:true,
@@ -27,6 +37,29 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 app.use(cookies())
 
+
+
+io.on('connection',(socket)=>{
+    console.log("user connected")
+    
+    socket.on("joinConversation",(conversationId)=>{
+        console.log(`User joined Conversation ID of ${conversationId}`)
+        socket.join(conversationId)
+    })
+
+    socket.on("sendMessage",(messageDetail)=>{
+        console.log("message Sent", messageDetail)
+        
+        // Emit to the specific conversation room
+        io.to(messageDetail.conversation).emit("receiveMessage", messageDetail)
+    })
+
+    socket.on("disconnect", () => {
+        console.log("user disconnected")
+    })
+
+})
+
 app.use("/api/auth", authRouter)
 app.use("/api/user", userRouter)
 app.use("/api/posts", postRouter)
@@ -37,11 +70,9 @@ app.use("/api/jobs", jobRouter);
 app.use("/api/chats", chatRouter);
 app.use("/api/upload", uploadRouter);
 
-app.get("/test",auth,(req,res)=>{
-    res.json({message:"test route", user:req.user})
-})
 
-app.listen(PORT, () => {
+
+server.listen(PORT, () => {
     console.log("server started", PORT);
     
 })

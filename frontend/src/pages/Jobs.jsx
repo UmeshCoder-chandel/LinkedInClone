@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ProfileCard from "../components/ProfileCard";
 import axios from "axios";
 import { toast } from "react-toastify";
-import ApplyModal from "../components/ApplyModal"; // We'll create this modal
+import { Link } from "react-router-dom";
 
 const API_URL = "http://localhost:4000/api/jobs";
 
@@ -10,8 +10,6 @@ export default function JobPage() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [ownData, setOwnData] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedJob, setSelectedJob] = useState(null);
 
   // Fetch logged-in user from localStorage
   useEffect(() => {
@@ -33,30 +31,16 @@ export default function JobPage() {
     }
   };
 
-  // Open modal for applying
-  const openApplyModal = (job) => {
-    setSelectedJob(job);
-    setModalOpen(true);
-  };
-
-  // Handle job application
-  const handleApply = async (jobId, coverLetter, resume) => {
-    try {
-      await axios.post(
-        `${API_URL}/${jobId}/apply`,
-        { coverLetter, resume },
-        { withCredentials: true }
-      );
-      toast.success("Applied successfully!");
-      setModalOpen(false);
-      fetchJobs(); // refresh job applications
-    } catch (err) {
-      console.error(err);
-      toast.error(err.response?.data?.message || "Failed to apply");
-    }
-  };
-
-  if (loading) return <p>Loading jobs...</p>;
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen mt-20">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading jobs...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex justify-center gap-6 px-8 py-6 bg-gray-50 min-h-screen mt-20">
@@ -73,50 +57,73 @@ export default function JobPage() {
          Top job picks for you
         </h2>
 
-        {jobs.map((job) => (
-          <div
-            key={job._id}
-            className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-lg hover:border-blue-400 transition duration-200"
-          >
-            <div className="flex justify-between items-start">
-              <div>
-                <h3 className="text-lg font-semibold text-blue-700 hover:underline cursor-pointer">
-                  {job.title}
-                </h3>
-                <p className="text-gray-800 font-medium">{job.company}</p>
-                {job.location && (
-                  <p className="text-sm text-gray-600 mt-1">📍 {job.location}</p>
-                )}
-                <div className="flex items-center gap-2 text-xs text-gray-400 mt-2">
-                 {new Date(job.createdAt).toLocaleDateString()}
+        {jobs.length > 0 ? (
+          jobs.map((job) => (
+            <div
+              key={job._id}
+              className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-lg hover:border-blue-400 transition duration-200"
+            >
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-blue-700 hover:underline cursor-pointer">
+                    {job.title}
+                  </h3>
+                  <p className="text-gray-800 font-medium">{job.company}</p>
+                  {job.location && (
+                    <p className="text-sm text-gray-600 mt-1">📍 {job.location}</p>
+                  )}
+                  {job.description && (
+                    <p className="text-sm text-gray-600 mt-2 line-clamp-3">
+                      {job.description}
+                    </p>
+                  )}
+                  <div className="flex items-center gap-2 text-xs text-gray-400 mt-2">
+                   {new Date(job.createdAt).toLocaleDateString()}
+                  </div>
                 </div>
               </div>
 
-              <button className="text-gray-400 hover:text-red-500 text-lg font-bold">
-                ✕
-              </button>
+              <div className="mt-4 flex justify-between items-center">
+                <div className="text-sm text-gray-500">
+                  {job.applications?.length || 0} applications
+                </div>
+                <Link
+                  to={`/jobs/apply/${job._id}`}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                >
+                  Apply Now
+                </Link>
+              </div>
             </div>
-
-            <div className="mt-4">
-              <button
-                onClick={() => openApplyModal(job)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-              >
-                Apply Now
-              </button>
-            </div>
+          ))
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-lg">No jobs available at the moment</p>
+            <p className="text-gray-400 text-sm mt-2">Check back later for new opportunities</p>
           </div>
-        ))}
+        )}
       </div>
 
-      {/* Apply Modal */}
-      {modalOpen && selectedJob && (
-        <ApplyModal
-          job={selectedJob}
-          onClose={() => setModalOpen(false)}
-          onApply={handleApply}
-        />
-      )}
+      {/* Right Sidebar */}
+      <div className="w-1/4 sticky top-24 hidden lg:block">
+        <div className="bg-white rounded-2xl shadow-md p-6">
+          <h3 className="text-lg font-semibold mb-4">Job Search Tips</h3>
+          <div className="space-y-3 text-sm text-gray-600">
+            <div className="p-3 bg-blue-50 rounded-lg">
+              <p className="font-medium text-blue-800">Customize Your Application</p>
+              <p className="text-blue-700 mt-1">Tailor your cover letter for each position</p>
+            </div>
+            <div className="p-3 bg-green-50 rounded-lg">
+              <p className="font-medium text-green-800">Update Your Resume</p>
+              <p className="text-green-700 mt-1">Keep your resume current and relevant</p>
+            </div>
+            <div className="p-3 bg-purple-50 rounded-lg">
+              <p className="font-medium text-purple-800">Network Effectively</p>
+              <p className="text-purple-700 mt-1">Connect with professionals in your field</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

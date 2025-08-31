@@ -14,9 +14,13 @@ import { Profile } from './pages/Profile'
 
 import axios from 'axios'
 import Jobs from './pages/Jobs'
+import JobApplication from './pages/JobApplication'
 import ViewResume from './pages/ViewResume'
 import AllActivities from './pages/allActivities'
 import SingleActivity from './pages/singleActivity'
+
+import socket from '../socket'
+
 
 
 function App(){
@@ -39,6 +43,7 @@ function App(){
         <Route path="/messages" element={ islogin?<Messages />:<Navigate to={'/login'}/>} />
         <Route path="/network" element={islogin?<Network />:<Navigate to={'/login'}/>} />
         <Route path="/jobs" element={islogin?<Jobs/>:<Navigate to={'/login'}/>} />
+        <Route path="/jobs/apply/:jobId" element={islogin?<JobApplication/>:<Navigate to={'/login'}/>} />
         <Route path="/notification" element={islogin?<Notification />:<Navigate to={'/login'}/>} />
         {/* <Route path="/view-resume" element={islogin?<ViewResume />:<Navigate to={'/login'}/>} /> */}
         <Route path='/profile/:id' element={islogin?<Profile />:<Navigate to={'/login'}/>} />

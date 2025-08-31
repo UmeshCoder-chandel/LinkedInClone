@@ -10,39 +10,33 @@ export const ImageModels = ({ isCircular, selfData, handleEditButton }) => {
 
 
   const handleInputImage = async (e) => {
-    // const files = e.target.files;
-    // const data = new FormData();
-    // data.append("file", files[0])
-
-    // data.append("upload_preset", "linkdinClone")
-    // setLoading(true)
-    // try {
-    //   const res = await axios.post("https://api.cloudinary.com/v1_1/dcpb8lsmn/image/upload", data);
-    //   const imageUrl = res.data.data;
-    //   setImageLink(imageUrl);
-    // } catch (error) {
-    //   console.error(error);
-    //   toast.error("Failed to upload image");
-    // } finally {
-    //   setLoading(false)
-    // }
     const files = e.target.files;
-    if (!files) return;
-   const data = new FormData();
-   data.append("file",files[0])
+    if (!files || files.length === 0) return;
 
-   data.append("upload_preset","linkdinClone")
-   try {
-     const res = await axios.post("http://localhost:4000/api/upload", data);
-    const imageUrl = res.data?.data;
-    console.log(imageUrl);
-    setImageLink(imageUrl);
-   } catch (error) {
-     console.error(error);
-     toast.error("Failed to upload image");
-   }
+    const data = new FormData();
+    data.append("file", files[0]);
 
-  }
+    setLoading(true);
+    try {
+      // Call your backend API (not direct Cloudinary anymore)
+      const res = await axios.post("http://localhost:4000/api/upload", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true, // only if cookies/session required
+      });
+
+      // ✅ Use "url" since backend now sends { url: result.secure_url }
+      const imageUrl = res.data?.url;
+      console.log("Uploaded Image URL:", imageUrl);
+
+      setImageLink(imageUrl);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to upload image");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async () => {
     const updatedUser = { ...selfData }
     if (isCircular) {
@@ -62,12 +56,17 @@ export const ImageModels = ({ isCircular, selfData, handleEditButton }) => {
           className="rounded-full w-[150px] h-[150px] object-cover border-4 border-gray-200 shadow-md"
           src={imageLink}
           alt="preview"
+          crossOrigin="anonymous"
+          onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = assets.image }}
         />
       ) : (
         <img
           className="rounded-xl w-full h-[200px] object-cover shadow-md"
           src={imageLink}
           alt="preview"
+            crossOrigin="anonymous"
+          onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = assets.image }}
+ 
         />
       )}
 
@@ -81,13 +80,13 @@ export const ImageModels = ({ isCircular, selfData, handleEditButton }) => {
         </label>
         <input onChange={handleInputImage} type="file" className="hidden" id="btn-submit" />
         {
-          loading ?<Box sx={{ display: 'flex' }}>
-          <CircularProgress />
-        </Box> :<button onClick={handleSubmit} className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-          Submit
-        </button>
+          loading ? <Box sx={{ display: 'flex' }}>
+            <CircularProgress />
+          </Box> : <button onClick={handleSubmit} className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+            Submit
+          </button>
         }
-         
+
       </div>
     </div>
   )

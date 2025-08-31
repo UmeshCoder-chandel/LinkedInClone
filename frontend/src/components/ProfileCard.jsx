@@ -14,6 +14,8 @@ const ProfileCard = (props) => {
             src={props.data?.coverPic || assets.image}
             alt="banner"
             className="w-full h-full object-cover"
+            crossOrigin="anonymous"
+            onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = assets.image }}
           />
           {/* Glass overlay */}
           {/* <div className="absolute inset-0 bg-gradient-to-b from-black/10 to-black/30 backdrop-blur-sm"></div> */}
@@ -25,6 +27,8 @@ const ProfileCard = (props) => {
             className="rounded-full border-4 border-white shadow-lg h-20 w-20 object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
             src={props.data?.profilePic || assets.image}
             alt="profile"
+            crossOrigin="anonymous"
+            onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = assets.image }}
           />
         </div>
       </div>
@@ -43,12 +47,12 @@ const ProfileCard = (props) => {
             bg-gradient-to-r from-blue-500/80 to-blue-700/80 
             backdrop-blur-md shadow-md hover:from-blue-600/90 hover:to-blue-800/90 
             transition-all duration-300"
-      >
+        >
           View Profile
         </Link>
       </div>
     </Card>
-      
+
   )
 }
 

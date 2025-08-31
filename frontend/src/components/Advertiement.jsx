@@ -3,22 +3,24 @@ import Card from './Card'
 import assets from '../assets'
 
 export const Advertisement = () => {
-  const [userData,setUserData] =useState(null)
+  const [userData, setUserData] = useState(null)
 
-  useEffect(()=>{
-    let userData=localStorage.getItem('userInfo')
-    setUserData(userData? JSON.parse(userData):null)
-  },[])
+  useEffect(() => {
+    let userData = localStorage.getItem('userInfo')
+    setUserData(userData ? JSON.parse(userData) : null)
+  }, [])
   return (
     <div className="sticky top-18">
       <Card padding={0}>
         <div className="relative">
           {/* Banner */}
           <div className="relative w-full h-28 rounded-t-md overflow-hidden">
-            <img 
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKyyl57N-3um2nrU83PZgwIwA6uSzQnefrsg&s" 
+            <img
+              src={userData?.coverPic}
               alt="banner"
               className="w-full h-full object-cover"
+              crossOrigin="anonymous"
+              onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = assets.image }}
             />
             {/* Overlay for glass look */}
             <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/40 backdrop-blur-sm"></div>
@@ -26,10 +28,12 @@ export const Advertisement = () => {
 
           {/* Profile */}
           <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 z-10">
-            <img 
-              className="rounded-full border-4 border-white shadow-lg h-20 w-20 object-cover cursor-pointer" 
-              src={assets.image || null}
+            <img
+              className="rounded-full border-4 border-white shadow-lg h-20 w-20 object-cover cursor-pointer"
+              src={userData?.profilePic || null}
               alt="profile"
+              crossOrigin="anonymous"
+              onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = assets.image }}
             />
           </div>
         </div>

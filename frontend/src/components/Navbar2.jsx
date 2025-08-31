@@ -28,23 +28,6 @@ const Navbar2 = () => {
     }
   }, [searchTerm])
 
-  // useEffect(() => {
-  //   if (debounceTerm) {
-  //     searchAPICall()
-  //   }
-  // }, [debounceTerm])
-
-  // const searchAPICall = async () => {
-  //   await axios.get(`http://localhost:4000/api/user`, { withCredentials: true }).then(res => {
-  //     console.log(res);
-  //     setSearchUser(res.data.users)
-  //   }).catch(err => {
-  //     console.log(err);
-
-  //   })
-  // }
-
-
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -106,29 +89,8 @@ const Navbar2 = () => {
           </Link>
 
           {/* Search Bar (hidden on mobile) */}
-          {/* <div className="hidden md:block relative">
-            <input
-              value={searchTerm}
-              onChange={(e) => { setSearchTerm(e.target.value) }}
-              placeholder="Search"
-              className="w-72 bg-white/30 backdrop-blur-md rounded-lg h-9 px-4 text-sm placeholder-gray-600 outline-none focus:ring-2 focus:ring-blue-400"
-            />
-            {
-              searchUser.length > 0 && debounceTerm.length!==0 && <div className="">
-                {
-                  searchUser.map((item, index) => {
-                    return (
-                      <Link to={`/profile/${item?._id}`} key={index} onClick={()=>setSearchTerm("")}>
-                        <div><img src={item?.profilePic} alt="" /></div>
-                        <div>{item?.name}</div>
-                      </Link>
-                    )
-                  })
-                }
-              </div>
-            }
-          </div> */}
-          <div className="hidden md:block relative">
+          
+          <div className=" md:block relative">
             <input
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -146,9 +108,11 @@ const Navbar2 = () => {
                     className="flex items-center px-3 py-2 hover:bg-blue-100 transition"
                   >
                     <img
-                      src={item?.profilePic}
+                      src={item?.profilePic || assets.image}
                       alt={item?.name}
                       className="w-8 h-8 rounded-full mr-2 object-cover"
+                      crossOrigin="anonymous"
+                      onError={(e)=>{e.currentTarget.onerror= null; e.currentTarget.src=assets.image}}
                     />
                     <span className="text-sm text-gray-700">{item?.name}</span>
                   </Link>
@@ -170,7 +134,7 @@ const Navbar2 = () => {
               path: "/notification",
               icon: <NotificationsIcon />,
               label: "Notifications",
-              badge: "1",
+              badge: notificationCount > 0 ? notificationCount :null,
             },
           ].map((item, idx) => (
             <Link
@@ -206,6 +170,8 @@ const Navbar2 = () => {
               className="w-9 h-9 rounded-full border border-white shadow-md"
               src={userData?.profilePic || assets.image}
               alt="me"
+              crossOrigin="anonymous"
+            onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = assets.image }}
             />
             <div className="text-sm text-gray-600 hover:text-black">Me</div>
           </Link>}

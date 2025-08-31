@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 const EditModel = ({selfData,handleEditButton}) => {
-  const [data,setData]=useState({name:selfData.name,headline:selfData.headline,curr_company:selfData.curr_company,location:selfData.location})
+  const [data,setData]=useState({name:selfData.name,headline:selfData.headline,curr_company:selfData.curr_company,location:selfData.location,github:selfData.github})
    
   const onChangeHandle=(event,key)=>{
     setData({...data,[key]:event.target.value})
@@ -60,6 +60,17 @@ console.log(selfData);
         <input
                 value={data.location}
         onChange={(e)=>{onChangeHandle(e,'location')}}
+          type="text"
+          className="p-2 mt-1 w-full border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          placeholder="Enter location"
+        />
+      </div>
+      {/* link */}
+      <div className="w-full mb-4">
+        <label className="text-sm font-medium text-gray-700">Website Link</label>
+        <input
+        value={data.github}
+        onChange={(e)=>{onChangeHandle(e,'github')}}
           type="text"
           className="p-2 mt-1 w-full border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
           placeholder="Enter location"

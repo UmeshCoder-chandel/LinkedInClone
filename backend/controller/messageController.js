@@ -4,21 +4,27 @@ import User from "../models/user.js";
 // Send a message
 export const sendMessage = async (req, res) => {
   try {
-    const { recipientId, text } = req.body;
+    const { conversation, message,picture } = req.body;
 
-    if (!text) return res.status(400).json({ message: "Message text is required" });
+let addMessage=new Message({sender:req.user._id,conversation,message,picture});
+await addMessage.save();
+let populatedMessage=await addMessage.populate('sender')
+    res.status(201).json(populatedMessage);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
-    // (Optional) check if they are connected before sending
-    const recipient = await User.findById(recipientId);
-    if (!recipient) return res.status(404).json({ message: "Recipient not found" });
+// Get messages by conversation ID
+export const getMessagesByConversation = async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+    
+    const messages = await Message.find({ conversation: conversationId })
+      .populate("sender", "name profilePic")
+      .sort({ createdAt: 1 });
 
-    const message = await Message.create({
-      sender: req.user._id,
-      recipient: recipientId,
-      text,
-    });
-
-    res.status(201).json(message);
+    res.json({ message: messages });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -45,7 +51,7 @@ export const getConversation = async (req, res) => {
   }
 };
 
-// Get recent chats (list of people I’ve messaged)
+// Get recent chats (list of people I've messaged)
 export const getRecentChats = async (req, res) => {
   try {
     const messages = await Message.find({
