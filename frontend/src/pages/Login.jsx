@@ -74,7 +74,7 @@ const handlePassword=()=>{setPassword(pre => !pre)}
     <div className='w-full flex items-center justify-center flex-col'>
       <div className='w-[85%] md:w-[25%] shadow-xl rounded-sm box p-10'>
         <div className='text-3xl'>Sign In</div>
-        <div className='my-5'><MyGoogleLogin changeValue={props.changeValue} /></div>
+        <div className='my-5'><MyGoogleLogin /></div>
           <div className='flex items-center gap-2'>
             <div className='border-b-1 border-gray-400 w-[45%]'></div>
             <div className='text-gray-400'>or</div>

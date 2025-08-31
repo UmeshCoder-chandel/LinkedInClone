@@ -62,7 +62,7 @@ export default function SignUp(props) {
           <div className='text-gray-400'>or</div>
           <div className='border-b border-gray-400 w-[45%]'></div>
         </div>
-        <div><MyGoogleLogin  changeValue={props.changeValue} /></div>
+        <div><MyGoogleLogin /></div>
       </div>
       
       
