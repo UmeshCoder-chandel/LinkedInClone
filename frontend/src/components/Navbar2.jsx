@@ -36,7 +36,7 @@ const Navbar2 = () => {
           return;
         }
         const res = await axios.get(
-          `http://localhost:4000/api/user`, { withCredentials: true }
+          `https://linkedinclone-backend-i2bq.onrender.com/api/user`, { withCredentials: true }
         );
 
         // filter users based on search term
@@ -54,7 +54,7 @@ const Navbar2 = () => {
   }, [debounceTerm]);
 
   const fetchNotification = async () => {
-    await axios.get(`http://localhost:4000/api/notifications/activeNotification`, { withCredentials: true }).then(res => {
+    await axios.get(`https://linkedinclone-backend-i2bq.onrender.com/api/notifications/activeNotification`, { withCredentials: true }).then(res => {
       // console.log(res.data.count)
       var count = res.data.count;
       setNotificationCount(count)

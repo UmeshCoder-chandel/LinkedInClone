@@ -35,7 +35,7 @@ const OTPVerificationModal = ({ isOpen, onClose, userId, onVerificationSuccess }
 
     setIsLoading(true);
     try {
-      const response = await axios.post('http://localhost:4000/api/auth/verify-otp', {
+      const response = await axios.post('https://linkedinclone-backend-i2bq.onrender.com/api/auth/verify-otp', {
         userId,
         otp
       });
@@ -54,7 +54,7 @@ const OTPVerificationModal = ({ isOpen, onClose, userId, onVerificationSuccess }
   const handleResendOTP = async () => {
     setIsResending(true);
     try {
-      const response = await axios.post('http://localhost:4000/api/auth/resend-otp', {
+      const response = await axios.post('https://linkedinclone-backend-i2bq.onrender.com/api/auth/resend-otp', {
         userId
       });
       

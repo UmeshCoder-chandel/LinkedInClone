@@ -18,7 +18,7 @@ export const AddModels = (props) => {
     
     setIsSubmitting(true);
     try {
-      const res = await axios.post("http://localhost:4000/api/posts", {
+      const res = await axios.post("https://linkedinclone-backend-i2bq.onrender.com/api/posts", {
         desc: desc.trim(),
         image: imageUrl
       }, { withCredentials: true });
@@ -59,7 +59,7 @@ export const AddModels = (props) => {
 
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:4000/api/upload", data, {
+      const res = await axios.post("https://linkedinclone-backend-i2bq.onrender.com/api/upload", data, {
         headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true,
       });

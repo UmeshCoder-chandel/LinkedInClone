@@ -4,7 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 
-const API_URL = "http://localhost:4000/api/jobs";
+const API_URL = "https://linkedinclone-backend-i2bq.onrender.com/api/jobs";
 
 export default function JobPage() {
   const [jobs, setJobs] = useState([]);

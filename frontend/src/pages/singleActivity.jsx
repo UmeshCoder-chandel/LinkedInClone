@@ -16,11 +16,11 @@ const SingleActivity = () => {
   const fetchDataOnLoad = async () => {
     try {
       // fetch the post details
-      const postRes = await axios.get(`http://localhost:4000/api/posts/${postId}`,{withCredentials:true});
+      const postRes = await axios.get(`https://linkedinclone-backend-i2bq.onrender.com/api/posts/${postId}`,{withCredentials:true});
       setPost(postRes.data);
 
       // fetch the profile details of this user
-      const userRes = await axios.get(`http://localhost:4000/api/user/${id}`,{withCredentials:true});
+      const userRes = await axios.get(`https://linkedinclone-backend-i2bq.onrender.com/api/user/${id}`,{withCredentials:true});
       setUserData(userRes.data.user);
 
 

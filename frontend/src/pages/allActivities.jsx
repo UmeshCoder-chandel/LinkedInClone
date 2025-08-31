@@ -15,7 +15,7 @@ const AllActivities = () => {
 
   const fetchProfile=async()=>{
     try {
-      const res=await axios.get(`http://localhost:4000/api/user/${id}`)
+      const res=await axios.get(`https://linkedinclone-backend-i2bq.onrender.com/api/user/${id}`)
       setProfile(res.data.user || null)
       console.log(res.data.user); 
     } catch (error) {
@@ -26,7 +26,7 @@ const AllActivities = () => {
   const fetchDataOnLoad = async () => {
     try {
       // fetch all posts of this user
-      const res = await axios.get(`http://localhost:4000/api/posts/getAllPost/${id}`);
+      const res = await axios.get(`https://linkedinclone-backend-i2bq.onrender.com/api/posts/getAllPost/${id}`);
       setPosts(res.data.posts || []);
     } catch (err) {
       console.log("Error fetching user activities", err);

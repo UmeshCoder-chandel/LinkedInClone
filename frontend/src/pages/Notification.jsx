@@ -42,7 +42,7 @@ export const Notification = () => {
     try {
       setLoading(true)
       setError(null)
-      const res = await axios.get(`http://localhost:4000/api/notifications`, { withCredentials: true })
+      const res = await axios.get(`https://linkedinclone-backend-i2bq.onrender.com/api/notifications`, { withCredentials: true })
       console.log(res.data)
       setNotifications(res.data)
     } catch (err) {
@@ -56,7 +56,7 @@ export const Notification = () => {
 
   const handleView = async (item) => {
     try {
-      await axios.put(`http://localhost:4000/api/notifications/read`, { notificationId: item._id }, { withCredentials: true })
+      await axios.put(`https://linkedinclone-backend-i2bq.onrender.com/api/notifications/read`, { notificationId: item._id }, { withCredentials: true })
       
       // Update local state to mark as read
       setNotifications(prev => prev.map(notif => 
@@ -76,7 +76,7 @@ export const Notification = () => {
 
   const handleRemove = async (item) => {
     try {
-      await axios.delete(`http://localhost:4000/api/notifications/${item._id}`, { withCredentials: true })
+      await axios.delete(`https://linkedinclone-backend-i2bq.onrender.com/api/notifications/${item._id}`, { withCredentials: true })
       setNotifications((prev) => (prev.filter((it) => it._id !== item._id)))
       toast.success("Notification deleted")
     } catch (err) {
@@ -96,7 +96,7 @@ export const Notification = () => {
       // Mark all unread notifications as read
       await Promise.all(
         unreadNotifications.map(notif =>
-          axios.put(`http://localhost:4000/api/notifications/read`, { notificationId: notif._id }, { withCredentials: true })
+          axios.put(`https://linkedinclone-backend-i2bq.onrender.com/api/notifications/read`, { notificationId: notif._id }, { withCredentials: true })
         )
       )
 

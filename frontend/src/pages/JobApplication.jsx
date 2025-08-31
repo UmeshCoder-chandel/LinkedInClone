@@ -31,7 +31,7 @@ export default function JobApplication() {
 
   const fetchJobDetails = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/api/jobs/${jobId}`, {
+      const response = await axios.get(`https://linkedinclone-backend-i2bq.onrender.com/api/jobs/${jobId}`, {
         withCredentials: true
       });
       setJob(response.data);
@@ -73,7 +73,7 @@ export default function JobApplication() {
       formData.append("file", resumeFile);
       formData.append("upload_preset", "linkdinClone");
       
-      const response = await axios.post("http://localhost:4000/api/upload", formData);
+      const response = await axios.post("https://linkedinclone-backend-i2bq.onrender.com/api/upload", formData);
       return response.data?.data;
     } catch (error) {
       console.error("Error uploading resume:", error);
@@ -122,7 +122,7 @@ export default function JobApplication() {
       };
 
       await axios.post(
-        `http://localhost:4000/api/jobs/${jobId}/apply`,
+        `https://linkedinclone-backend-i2bq.onrender.com/api/jobs/${jobId}/apply`,
         applicationData,
         { withCredentials: true }
       );

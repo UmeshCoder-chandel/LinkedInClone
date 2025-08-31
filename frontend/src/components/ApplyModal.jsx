@@ -57,7 +57,7 @@ export default function ApplyModal({ job, onClose, onApply }) {
         formData.append("file", resumeFile);
         formData.append("upload_preset", "linkdinClone");
         
-        const response = await fetch("http://localhost:4000/api/upload", {
+        const response = await fetch("https://linkedinclone-backend-i2bq.onrender.com/api/upload", {
           method: "POST",
           body: formData,
         });

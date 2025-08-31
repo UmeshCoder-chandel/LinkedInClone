@@ -32,7 +32,7 @@ export default function PostCard({ profile, item, personData }) {
 
     try {
       const res = await axios.post(
-        'http://localhost:4000/api/comment',
+        'https://linkedinclone-backend-i2bq.onrender.com/api/comment',
         { postId: item._id, comment: commentText },
         { withCredentials: true }
       );
@@ -48,7 +48,7 @@ export default function PostCard({ profile, item, personData }) {
   const handleLikeFunc = async () => {
     try {
       await axios.post(
-        'http://localhost:4000/api/posts/likeDislike',
+        'https://linkedinclone-backend-i2bq.onrender.com/api/posts/likeDislike',
         { postId: item._id },
         { withCredentials: true }
       );
@@ -70,7 +70,7 @@ export default function PostCard({ profile, item, personData }) {
     setComment(true);
     try {
       const res = await axios.get(
-        `http://localhost:4000/api/comment/${item?._id}`
+        `https://linkedinclone-backend-i2bq.onrender.com/api/comment/${item?._id}`
       );
       setComments(res.data.comments || []);
     } catch (err) {
@@ -99,7 +99,7 @@ export default function PostCard({ profile, item, personData }) {
   }
 
   const handleDeleteClick = async () => {
-    await axios.delete(`http://localhost:4000/api/posts/${item?._id}`, { withCredentials: true }).then(res => {
+    await axios.delete(`https://linkedinclone-backend-i2bq.onrender.com/api/posts/${item?._id}`, { withCredentials: true }).then(res => {
       toast.success("post deleted successfully")
     }).catch(err => {
       toast.error("failed to delete post")

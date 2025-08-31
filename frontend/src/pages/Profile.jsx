@@ -72,9 +72,9 @@ export const Profile = () => {
     setIsLoading(true);
     try {
       const [userDatas, postDatas, ownDatas] = await Promise.all([
-        axios.get(`http://localhost:4000/api/user/${id}`),
-        axios.get(`http://localhost:4000/api/posts/getTop5Post/${id}`),
-        axios.get("http://localhost:4000/api/auth/self", { withCredentials: true }),
+        axios.get(`https://linkedinclone-backend-i2bq.onrender.com/api/user/${id}`),
+        axios.get(`https://linkedinclone-backend-i2bq.onrender.com/api/posts/getTop5Post/${id}`),
+        axios.get("https://linkedinclone-backend-i2bq.onrender.com/api/auth/self", { withCredentials: true }),
       ]);
 
       setUserData(userDatas?.data?.user || null);
@@ -104,7 +104,7 @@ export const Profile = () => {
   const handleEditButton = async (data) => {
     setIsUpdating(true);
     try {
-      await axios.put(`http://localhost:4000/api/user/update`, { user: data }, { withCredentials: true });
+      await axios.put(`https://linkedinclone-backend-i2bq.onrender.com/api/user/update`, { user: data }, { withCredentials: true });
       toast.success("Profile updated successfully");
       await fetchDataOnLoad(); // Refresh data instead of page reload
     } catch (err) {
@@ -149,15 +149,15 @@ export const Profile = () => {
     setIsSendingRequest(true);
     try {
       if (checkFriendStatus() === "Connect") {
-        const res = await axios.post('http://localhost:4000/api/user/sendFriendReq', { reciever: userData?._id }, { withCredentials: true });
+        const res = await axios.post('https://linkedinclone-backend-i2bq.onrender.com/api/user/sendFriendReq', { reciever: userData?._id }, { withCredentials: true });
         toast.success(res.data.message);
         await fetchDataOnLoad(); // Refresh data
       } else if (checkFriendStatus() === "Approve Request") {
-        const res = await axios.post('http://localhost:4000/api/user/acceptFriendRequest', { friendId: userData?._id }, { withCredentials: true });
+        const res = await axios.post('https://linkedinclone-backend-i2bq.onrender.com/api/user/acceptFriendRequest', { friendId: userData?._id }, { withCredentials: true });
         toast.success(res.data.message);
         await fetchDataOnLoad(); // Refresh data
       } else if (checkFriendStatus() === "Disconnect") {
-        const res = await axios.delete(`http://localhost:4000/api/user/removeFromFriendList/${userData?._id}`, { withCredentials: true });
+        const res = await axios.delete(`https://linkedinclone-backend-i2bq.onrender.com/api/user/removeFromFriendList/${userData?._id}`, { withCredentials: true });
         toast.success(res.data.message);
         await fetchDataOnLoad(); // Refresh data
       }
@@ -171,7 +171,7 @@ export const Profile = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post(`http://localhost:4000/api/auth/logout`, {}, { withCredentials: true });
+      await axios.post(`https://linkedinclone-backend-i2bq.onrender.com/api/auth/logout`, {}, { withCredentials: true });
       localStorage.clear();
       toast.success("Logged out successfully");
       window.location.href = '/login';

@@ -26,7 +26,7 @@ const handlePassword=()=>{setPassword(pre => !pre)}
   if(loginField.email.trim().length===0 || loginField.password.trim().length===0){
     return toast.error("please fill all block")
   }
-   await axios.post(`http://localhost:4000/api/auth/login`,loginField,{withCredentials:true}).then((res)=>{
+   await axios.post(`https://linkedinclone-backend-i2bq.onrender.com/api/auth/login`,loginField,{withCredentials:true}).then((res)=>{
     props.changeValue(true)
       localStorage.setItem('islogin','true')
       localStorage.setItem("userInfo",JSON.stringify(res.data.user))
@@ -48,7 +48,7 @@ const handlePassword=()=>{setPassword(pre => !pre)}
 
     setIsLoading(true);
     try {
-      const response = await axios.post('http://localhost:4000/api/auth/forgot-password', {
+      const response = await axios.post('https://linkedinclone-backend-i2bq.onrender.com/api/auth/forgot-password', {
         email: forgotEmail.trim()
       });
       
@@ -209,7 +209,7 @@ const PasswordResetModal = ({ isOpen, onClose, userId, onResetSuccess }) => {
 
     setIsLoading(true);
     try {
-      const response = await axios.post('http://localhost:4000/api/auth/reset-password', {
+      const response = await axios.post('https://linkedinclone-backend-i2bq.onrender.com/api/auth/reset-password', {
         userId,
         otp,
         newPassword
@@ -229,7 +229,7 @@ const PasswordResetModal = ({ isOpen, onClose, userId, onResetSuccess }) => {
   const handleResendOTP = async () => {
     setIsResending(true);
     try {
-      const response = await axios.post('http://localhost:4000/api/auth/resend-otp', {
+      const response = await axios.post('https://linkedinclone-backend-i2bq.onrender.com/api/auth/resend-otp', {
         userId
       });
       

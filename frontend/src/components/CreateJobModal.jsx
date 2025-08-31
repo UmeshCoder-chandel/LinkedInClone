@@ -16,7 +16,7 @@ export const CreateJobModal = ({ closeModal, onJobPosted }) => {
 
   const handleSubmit = async () => {
     try {
-      const res = await axios.post("http://localhost:4000/api/jobs", jobForm, { withCredentials: true });
+      const res = await axios.post("https://linkedinclone-backend-i2bq.onrender.com/api/jobs", jobForm, { withCredentials: true });
       toast.success("Job posted successfully!");
       setJobForm({ title: "", company: "", location: "", description: "" });
       closeModal();

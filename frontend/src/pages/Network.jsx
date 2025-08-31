@@ -24,7 +24,7 @@ export const Network = () => {
   const fetchFriendlist = async () => {
     setLoading(true)
     try {
-      const res = await axios.get('http://localhost:4000/api/user/friendsList', { withCredentials: true })
+      const res = await axios.get('https://linkedinclone-backend-i2bq.onrender.com/api/user/friendsList', { withCredentials: true })
       setData(res.data.friends || [])
       setFilteredData(res.data.friends || [])
       setStats(prev => ({ ...prev, friends: res.data.friends?.length || 0 }))
@@ -40,7 +40,7 @@ export const Network = () => {
   const fetchPendingRequest = async () => {
     setLoading(true)
     try {
-      const res = await axios.get("http://localhost:4000/api/user/pendingFriendsList", { withCredentials: true })
+      const res = await axios.get("https://linkedinclone-backend-i2bq.onrender.com/api/user/pendingFriendsList", { withCredentials: true })
       setData(res.data.friends || [])
       setFilteredData(res.data.friends || [])
       setStats(prev => ({ ...prev, pending: res.data.friends?.length || 0 }))
@@ -56,7 +56,7 @@ export const Network = () => {
   const fetchSuggestions = async () => {
     setLoadingSuggestions(true)
     try {
-      const res = await axios.get("http://localhost:4000/api/user/suggestions", { withCredentials: true })
+      const res = await axios.get("https://linkedinclone-backend-i2bq.onrender.com/api/user/suggestions", { withCredentials: true })
       setSuggestions(res.data.suggestions || [])
       setStats(prev => ({ ...prev, suggestions: res.data.suggestions?.length || 0 }))
     } catch (err) {
@@ -71,16 +71,16 @@ export const Network = () => {
   const handleFriendAction = async (userId, action) => {
     try {
       if (action === 'accept') {
-        await axios.post('http://localhost:4000/api/user/acceptFriendRequest', { friendId: userId }, { withCredentials: true })
+        await axios.post('https://linkedinclone-backend-i2bq.onrender.com/api/user/acceptFriendRequest', { friendId: userId }, { withCredentials: true })
         toast.success("Friend request accepted!")
       } else if (action === 'reject') {
-        await axios.delete(`http://localhost:4000/api/user/rejectFriendRequest/${userId}`, { withCredentials: true })
+        await axios.delete(`https://linkedinclone-backend-i2bq.onrender.com/api/user/rejectFriendRequest/${userId}`, { withCredentials: true })
         toast.success("Friend request rejected")
       } else if (action === 'send') {
-        await axios.post('http://localhost:4000/api/user/sendFriendReq', { reciever: userId }, { withCredentials: true })
+        await axios.post('https://linkedinclone-backend-i2bq.onrender.com/api/user/sendFriendReq', { reciever: userId }, { withCredentials: true })
         toast.success("Friend request sent!")
       } else if (action === 'remove') {
-        await axios.delete(`http://localhost:4000/api/user/removeFromFriendList/${userId}`, { withCredentials: true })
+        await axios.delete(`https://linkedinclone-backend-i2bq.onrender.com/api/user/removeFromFriendList/${userId}`, { withCredentials: true })
         toast.success("Friend removed")
       }
       

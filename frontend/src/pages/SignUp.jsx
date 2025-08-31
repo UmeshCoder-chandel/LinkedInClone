@@ -20,7 +20,7 @@ export default function SignUp(props) {
     if(registerData.email.trim().length===0 || registerData.name.trim().length===0 || registerData.password.trim().length===0){
       return toast.error("please fill all details")
     }
-    await axios.post('http://localhost:4000/api/auth/register',registerData).then(res=>{
+    await axios.post('https://linkedinclone-backend-i2bq.onrender.com/api/auth/register',registerData).then(res=>{
       toast.success(res.data.message);
       setUserId(res.data.userId);
       setShowOTPModal(true);

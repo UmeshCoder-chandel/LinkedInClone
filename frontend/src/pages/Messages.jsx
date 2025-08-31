@@ -91,7 +91,7 @@ export default function Messages() {
 
   const fetchMessages = async () => {
     try {
-      const res = await axios.get(`http://localhost:4000/api/messages/conversation/${activeCover}`, { withCredentials: true });
+      const res = await axios.get(`https://linkedinclone-backend-i2bq.onrender.com/api/messages/conversation/${activeCover}`, { withCredentials: true });
       console.log(res.data);
       setMessages(res.data.message || []);
     } catch (err) {
@@ -121,7 +121,7 @@ export default function Messages() {
     setImageLink(null);
 
     try {
-      const res = await axios.post("http://localhost:4000/api/upload", data);
+      const res = await axios.post("https://linkedinclone-backend-i2bq.onrender.com/api/upload", data);
       const imageUrl = res.data?.data;
       console.log(imageUrl);
       setImageLink(imageUrl);
@@ -136,7 +136,7 @@ export default function Messages() {
 
   const fetchConversation = async () => {
     try {
-      const res = await axios.get(`http://localhost:4000/api/chats/get-chat`, { withCredentials: true });
+      const res = await axios.get(`https://linkedinclone-backend-i2bq.onrender.com/api/chats/get-chat`, { withCredentials: true });
       console.log(res.data.conversations);
       setConversations(res.data.conversations);
       
@@ -174,7 +174,7 @@ export default function Messages() {
         picture: imageLink
       };
 
-      const res = await axios.post(`http://localhost:4000/api/messages`, messageData, { withCredentials: true });
+      const res = await axios.post(`https://linkedinclone-backend-i2bq.onrender.com/api/messages`, messageData, { withCredentials: true });
       console.log(res.data);
 
       // Add the new message to the messages array

@@ -10,7 +10,7 @@ const MyGoogleLogin = (props) => {
  try {
       const token = credentialResponse.credential;
       const res = await axios.post(
-        "http://localhost:4000/api/auth/google",
+        "https://linkedinclone-backend-i2bq.onrender.com/api/auth/google",
         { token },
         { withCredentials: true }
       );
@@ -55,7 +55,7 @@ export default MyGoogleLogin;
 
 //       // Send token to backend
 //       const { data } = await axios.post(
-//         "http://localhost:4000/api/auth/google",
+//         "https://linkedinclone-backend-i2bq.onrender.com/api/auth/google",
 //         { token },
 //         { withCredentials: true } // ✅ so backend can set cookies (JWT/refresh)
 //       );

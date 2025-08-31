@@ -16,7 +16,7 @@ export default function ForgetPassword() {
 
     setIsLoading(true);
     try {
-      const response = await axios.post('http://localhost:4000/api/auth/forgot-password', {
+      const response = await axios.post('https://linkedinclone-backend-i2bq.onrender.com/api/auth/forgot-password', {
         email: email.trim()
       });
       

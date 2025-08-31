@@ -27,8 +27,8 @@ export default function Home() {
     setLoading(true);
     try {
       const [userdata, postdata] = await Promise.all([
-        axios.get("http://localhost:4000/api/auth/self", { withCredentials: true }),
-        axios.get("http://localhost:4000/api/posts")
+        axios.get("https://linkedinclone-backend-i2bq.onrender.com/api/auth/self", { withCredentials: true }),
+        axios.get("https://linkedinclone-backend-i2bq.onrender.com/api/posts")
       ]);
       
       setPersonData(userdata.data.user);
@@ -58,7 +58,7 @@ export default function Home() {
     
     setLoadingMore(true);
     try {
-      const response = await axios.get(`http://localhost:4000/api/posts?page=${page + 1}`);
+      const response = await axios.get(`https://linkedinclone-backend-i2bq.onrender.com/api/posts?page=${page + 1}`);
       const newPosts = response.data.posts || response.data;
       
       if (newPosts.length === 0) {
@@ -106,7 +106,7 @@ export default function Home() {
   const handleAddPost = async (postContent) => {
     try {
       const res = await axios.post(
-        "http://localhost:4000/api/posts",
+        "https://linkedinclone-backend-i2bq.onrender.com/api/posts",
         postContent,
         { withCredentials: true }
       );

@@ -10,7 +10,7 @@ const MessageModal = ({ selfData, userData }) => {
 
     try {
       setLoading(true);
-      await axios.post("http://localhost:4000/api/chats/add-chat", {
+      await axios.post("https://linkedinclone-backend-i2bq.onrender.com/api/chats/add-chat", {
         recieverId: userData?._id,
         message: message,
       }, { withCredentials: true });
