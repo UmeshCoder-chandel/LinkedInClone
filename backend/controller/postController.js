@@ -7,15 +7,39 @@ const createPost=async(req,res)=>{
     try {
         const {desc,image}=req.body;
         let userId=req.user._id
-        const addPost=new Post({user:userId,desc,image})
+        
+        // Validate post content
+        if (!desc?.trim() && !image) {
+            return res.status(400).json({message: "Post must contain text or image"});
+        }
+        
+        // Check for duplicate posts (same content within last 5 minutes)
+        const recentPosts = await Post.find({
+            user: userId,
+            createdAt: { $gte: new Date(Date.now() - 5 * 60 * 1000) }
+        });
+        
+        const isDuplicate = recentPosts.some(post => 
+            post.desc === desc && post.image === image
+        );
+        
+        if (isDuplicate) {
+            return res.status(400).json({message: "You've already posted this content recently"});
+        }
+        
+        const addPost=new Post({user:userId,desc: desc?.trim(),image})
         if(!addPost){
-            return res.status(400).json("Error creating post");
+            return res.status(400).json({message: "Error creating post"});
         }
         await addPost.save();
+        
+        // Populate user data before sending response
+        await addPost.populate("user", 'name profilePic headline');
+        
         res.status(201).json({message:"post created successfully",post:addPost});
     } catch (error) {
         console.log(error);
-        res.status(500).json("some error in post add")
+        res.status(500).json({message: "some error in post add"})
     }
 
 }
@@ -55,10 +79,10 @@ const deletePost=async (req,res) => {
         const userId=req.user._id
         const post=await Post.findById(postId);
         if(!post){
-            return res.status(404).json("post not found");
+            return res.status(404).json({message: "post not found"});
         }
         if(post.user.toString()!==userId.toString()){
-            return res.status(403).json("you are not authorized to delete")
+            return res.status(403).json({message: "you are not authorized to delete"})
         }
         if (post.image) {
             try {
@@ -74,9 +98,10 @@ const deletePost=async (req,res) => {
             }
         }
         await Post.findByIdAndDelete(postId);
-        res.status(200).json("post deleted successfully")
+        res.status(200).json({message: "post deleted successfully"})
     }catch (error) {
-        res.status(500).json("some error in deleting post");
+        console.error("Delete post error:", error);
+        res.status(500).json({message: "some error in deleting post"});
     }
 }
 

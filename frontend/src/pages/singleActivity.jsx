@@ -48,7 +48,10 @@ const SingleActivity = () => {
       {/* middle side */}
       <div className="w-[100%] py-5 sm:w-[50%]">
         {post ? (
-          <PostCard item={post} personData={userData} ownData={ownData} />
+          <PostCard item={post} personData={userData} ownData={ownData} onPostDelete={() => {
+            // Redirect to activities page after deletion
+            window.location.href = `/profile/${id}/activities`;
+          }} />
         ) : (
           <Card>
             <p className="text-center text-gray-600">Loading post...</p>

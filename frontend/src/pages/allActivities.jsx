@@ -59,9 +59,12 @@ const AllActivities = () => {
               posts.map((item, index) => (
                 <PostCard
                   key={index}
-                  data={item}
+                  item={item}
                   personData={item.user}
                   ownData={ownData}
+                  onPostDelete={(postId) => {
+                    setPosts(prev => prev.filter(post => post._id !== postId));
+                  }}
                 />
               ))
             ) : (

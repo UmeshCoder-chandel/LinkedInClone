@@ -105,11 +105,33 @@ export default function Home() {
   // Add new post
   const handleAddPost = async (postContent) => {
     try {
+      // Validate post content
+      if (!postContent.desc?.trim() && !postContent.image) {
+        toast.error("Please add some content to your post");
+        return;
+      }
+
+      // Check for duplicate posts (same content within last 5 minutes)
+      const recentPosts = posts.filter(post => 
+        post.user._id === personData._id && 
+        Date.now() - new Date(post.createdAt).getTime() < 5 * 60 * 1000
+      );
+      
+      const isDuplicate = recentPosts.some(post => 
+        post.desc === postContent.desc && post.image === postContent.image
+      );
+      
+      if (isDuplicate) {
+        toast.error("You've already posted this content recently");
+        return;
+      }
+
       const res = await axios.post(
         "https://linkedinclone-backend-i2bq.onrender.com/api/posts",
         postContent,
         { withCredentials: true }
       );
+      
       setPosts((prev) => [res.data.post, ...prev]);
       setFilteredPosts((prev) => [res.data.post, ...prev]);
       toast.success("Post created successfully!");
@@ -118,6 +140,12 @@ export default function Home() {
       console.error(error);
       toast.error(error?.response?.data?.message || "Failed to create post");
     }
+  };
+
+  // Handle post deletion
+  const handlePostDelete = (postId) => {
+    setPosts((prev) => prev.filter(post => post._id !== postId));
+    setFilteredPosts((prev) => prev.filter(post => post._id !== postId));
   };
 
   useEffect(() => {
@@ -246,7 +274,7 @@ export default function Home() {
           {filteredPosts.length > 0 ? (
             filteredPosts.map((item, index) => (
               <div key={item._id} ref={index === filteredPosts.length - 1 ? lastPostRef : null}>
-                <PostCard item={item} personData={personData} />
+                <PostCard item={item} personData={personData} onPostDelete={handlePostDelete} />
               </div>
             ))
           ) : searchQuery ? (

@@ -428,7 +428,9 @@ export const Profile = () => {
                 {postData.length > 0 ? (
                   postData.map((item, index) => (
                     <Link to={`/profile/${id}/activities/${item?._id}`} key={item?._id} className="cursor-pointer shrink-0 w-[350px]">
-                      <PostCard profile={1} item={item} personData={ownData} />
+                      <PostCard profile={1} item={item} personData={ownData} onPostDelete={(postId) => {
+                        setPostData(prev => prev.filter(post => post._id !== postId));
+                      }} />
                     </Link>
                   ))
                 ) : (

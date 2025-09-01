@@ -99,11 +99,18 @@ export default function PostCard({ profile, item, personData }) {
   }
 
   const handleDeleteClick = async () => {
-    await axios.delete(`https://linkedinclone-backend-i2bq.onrender.com/api/posts/${item?._id}`, { withCredentials: true }).then(res => {
-      toast.success("post deleted successfully")
-    }).catch(err => {
-      toast.error("failed to delete post")
-    })
+    try {
+      await axios.delete(`https://linkedinclone-backend-i2bq.onrender.com/api/posts/${item?._id}`, { withCredentials: true });
+      toast.success("Post deleted successfully");
+      
+      // Remove the post from parent component state
+      if (props.onPostDelete) {
+        props.onPostDelete(item._id);
+      }
+    } catch (err) {
+      console.error("Delete error:", err);
+      toast.error("Failed to delete post");
+    }
   }
 
   return (
