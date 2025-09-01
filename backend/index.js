@@ -23,14 +23,24 @@ const server = http.createServer(app)
 const io = new Server(server,{
     cors:{
         origin:"https://linkedinclone-frontend.onrender.com",
-        method:['GET','POST']
+        method:['GET','POST'],
+        credentials:true
     }
 })
 
 app.use(cors({
-    credentials:true,
-    origin:"https://linkedinclone-frontend.onrender.com"
-}))
+  origin: "https://linkedinclone-frontend.onrender.com",
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
+
+app.options("*", cors({
+  origin: "https://linkedinclone-frontend.onrender.com",
+  credentials: true
+}));
+
 app.set("trust proxy", 1);
 const PORT=process.env.PORT || 3000
  
@@ -60,6 +70,14 @@ io.on('connection',(socket)=>{
     })
 
 })
+
+
+
+
+
+
+
+
 
 app.use("/api/auth", authRouter)
 app.use("/api/user", userRouter)
