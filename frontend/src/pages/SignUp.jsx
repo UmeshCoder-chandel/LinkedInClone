@@ -47,13 +47,13 @@ export default function SignUp(props) {
         <div className='flex flex-col gap-4'>
           <div>
             <label htmlFor="full-name">Full Name</label>
-            <input value={registerData.name} onChange={(e) => handleInput(e, 'name')} className="w-full text-xl border-2 rounded-lg px-5 py-1" placeholder="Full name" /></div>
+            <input value={registerData.name} onChange={(e) => handleInput(e, 'name')} className="w-full text-xl border-2 rounded-lg px-5 py-1" placeholder="Full name"  required/></div>
           <div>
             <label htmlFor="email">Email</label>
-            <input value={registerData.email} onChange={(e) => handleInput(e, 'email')} className="w-full text-xl border-2 rounded-lg px-5 py-1" placeholder="Email" /></div>
+            <input value={registerData.email} onChange={(e) => handleInput(e, 'email')} className="w-full text-xl border-2 rounded-lg px-5 py-1" placeholder="Email" required/></div>
           <div>
             <label htmlFor="password">Password</label>
-            <input value={registerData.password} onChange={(e) => handleInput(e, 'password')} className="w-full text-xl border-2 rounded-lg px-5 py-1" placeholder="Password" type="password" />
+            <input value={registerData.password} onChange={(e) => handleInput(e, 'password')} className="w-full text-xl border-2 rounded-lg px-5 py-1" placeholder="Password" type="password" required/>
             </div>
           <div onClick={handleRegister} className='w-full hover:bg-blue-900 bg-blue-800 text-white py-2 px-4 rounded-xl text-center cursor-pointer my-2'>Register</div>
         </div>
