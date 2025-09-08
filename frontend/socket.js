@@ -3,7 +3,6 @@ import {io} from 'socket.io-client'
 const socket = io("https://linkedinclone-backend-i2bq.onrender.com", {
     withCredentials: true,
     transports: ["websocket"],
-    timeout: 10000,
     reconnection: true,
     reconnectionAttempts: 5,
     reconnectionDelay: 1000
