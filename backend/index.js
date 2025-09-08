@@ -72,10 +72,9 @@ io.on('connection',(socket)=>{
 })
 
 
-
-
-
-
+app.get("/", (req, res) => {
+  res.send("🚀 LinkedIn Clone Backend is running!");
+});
 
 
 
