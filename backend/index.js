@@ -36,10 +36,10 @@ app.use(cors({
 }));
 
 
-app.options("*", cors({
-  origin: "https://linkedinclone-frontend.onrender.com",
-  credentials: true
-}));
+// app.options("*", cors({
+//   origin: "https://linkedinclone-frontend.onrender.com",
+//   credentials: true
+// }));
 
 app.set("trust proxy", 1);
 const PORT=process.env.PORT || 3000

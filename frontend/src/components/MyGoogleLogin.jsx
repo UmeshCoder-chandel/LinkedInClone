@@ -18,8 +18,10 @@ const MyGoogleLogin = (props) => {
 
       localStorage.setItem('islogin', 'true')
       localStorage.setItem('userInfo', JSON.stringify(res.data.user))
-      props.changeLogin(true)
-      navigate('/home')
+      if (props.changeValue) {
+        props.changeValue(true);
+      }
+      navigate('/home');
     } catch (error) {
       console.error(error);
     }
