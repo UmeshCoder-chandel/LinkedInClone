@@ -5,6 +5,9 @@ import assets from '../assets';
 import ResumeButton from './ResumeButton';
 
 const ProfileCard = (props) => {
+  console.log("props in profile card",props);
+  // console.log("props data in profile card",props.data?.resume);
+  console.log("props data in profile card",props.data?.resume);
 
   return (
     <Card padding={0}>
@@ -43,12 +46,12 @@ const ProfileCard = (props) => {
         </p>
 
         {/* Action Buttons */}
-        <div className="flex gap-2 mt-2">
+        <div className="flex flex-col sm:flex-row gap-2 mt-4 w-full">
           <Link to={`/profile/${props.data?._id}`}
-            className="px-5 py-2 rounded-2xl font-semibold text-white 
+            className="flex-1 px-4 py-2 rounded-2xl font-semibold text-white text-center 
               bg-gradient-to-r from-blue-500/80 to-blue-700/80 
               backdrop-blur-md shadow-md hover:from-blue-600/90 hover:to-blue-800/90 
-              transition-all duration-300"
+              transition-all duration-300 text-sm sm:text-base"
           >
             View Profile
           </Link>
@@ -57,10 +60,10 @@ const ProfileCard = (props) => {
           <ResumeButton 
             resumeUrl={props.data?.resume}
             fileName={`${props.data?.name}'s Resume`}
-            className="px-5 py-2 rounded-2xl font-semibold text-white 
+            className=" flex-1 px-4 py-2 rounded-2xl font-semibold text-white text-center
               bg-gradient-to-r from-green-500/80 to-green-700/80 
               backdrop-blur-md shadow-md hover:from-green-600/90 hover:to-green-800/90 
-              transition-all duration-300"
+              transition-all duration-300 text-sm sm:text-base"
           >
             Resume
           </ResumeButton>

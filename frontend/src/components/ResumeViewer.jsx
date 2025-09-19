@@ -5,6 +5,8 @@ const ResumeViewer = ({ resumeUrl, fileName, onClose }) => {
   const [viewMode, setViewMode] = useState("embed"); // "embed", "download", "preview"
   const [pdfError, setPdfError] = useState(false);
 
+  console.log("resumeUrl",{resumeUrl,fileName})
+
   useEffect(() => {
     // Reset PDF error state when resume URL changes
     setPdfError(false);

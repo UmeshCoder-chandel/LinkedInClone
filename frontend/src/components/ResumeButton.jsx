@@ -4,14 +4,20 @@ import ResumeViewer from "./ResumeViewer";
 const ResumeButton = ({ resumeUrl, fileName, className = "", children }) => {
   const [showResume, setShowResume] = useState(false);
 
+  console.log("resumeUrl",{resumeUrl,fileName,className,children})
   if (!resumeUrl) {
+    console.log("no resume url");
+    
     return null; // Don't show button if no resume
   }
 
   return (
     <>
       <button
-        onClick={() => setShowResume(true)}
+        onClick={() => {
+          console.log("show resume");
+          setShowResume(true);
+        }}
         className={`inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors ${className}`}
       >
         <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
