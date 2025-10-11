@@ -71,10 +71,33 @@ const Navbar2 = () => {
 
     fetchNotification()
     
+    // Set up periodic refresh of notification count every 30 seconds
+    const interval = setInterval(() => {
+      fetchNotification()
+    }, 30000)
+    
     // Cleanup function
     return () => {
       setSearchUser([]);
       setNotificationCount(0);
+      clearInterval(interval);
+    }
+  }, [])
+
+  // Listen for storage changes to update notification count when notifications are read
+  useEffect(() => {
+    const handleStorageChange = () => {
+      fetchNotification()
+    }
+
+    window.addEventListener('storage', handleStorageChange)
+    
+    // Also listen for custom events for same-tab updates
+    window.addEventListener('notificationUpdated', handleStorageChange)
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+      window.removeEventListener('notificationUpdated', handleStorageChange)
     }
   }, [])
 

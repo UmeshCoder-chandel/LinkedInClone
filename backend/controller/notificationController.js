@@ -49,7 +49,7 @@ export const deleteNotification = async (req, res) => {
 
 export const activeNotify=async(req,res)=>{
   try {
-        let owrId=req.body?._id
+        let owrId=req.user._id
         let notification=await Notification.find({reciever:owrId,isRead:false})
         return res.status(200).json({
           message:"notication number fetched ",

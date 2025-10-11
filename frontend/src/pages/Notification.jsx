@@ -23,6 +23,9 @@ export const Notification = () => {
     setOwnData(userData ? JSON.parse(userData) : null)
 
     fetchNotification()
+    
+    // Dispatch custom event to update navbar notification count when page loads
+    window.dispatchEvent(new CustomEvent('notificationUpdated'))
   }, [])
 
   // Function to format time difference
@@ -63,6 +66,9 @@ export const Notification = () => {
         notif._id === item._id ? { ...notif, isRead: true } : notif
       ))
 
+      // Dispatch custom event to update navbar notification count
+      window.dispatchEvent(new CustomEvent('notificationUpdated'))
+
       if (item.type === "comment") {
         navigate(`/profile/${ownData?._id}/activities/${item.postId}`)
       } else {
@@ -78,6 +84,10 @@ export const Notification = () => {
     try {
       await axios.delete(`https://linkedinclone-backend-i2bq.onrender.com/api/notifications/${item._id}`, { withCredentials: true })
       setNotifications((prev) => (prev.filter((it) => it._id !== item._id)))
+      
+      // Dispatch custom event to update navbar notification count
+      window.dispatchEvent(new CustomEvent('notificationUpdated'))
+      
       toast.success("Notification deleted")
     } catch (err) {
       console.log(err)
@@ -101,6 +111,10 @@ export const Notification = () => {
       )
 
       setNotifications(prev => prev.map(notif => ({ ...notif, isRead: true })))
+      
+      // Dispatch custom event to update navbar notification count
+      window.dispatchEvent(new CustomEvent('notificationUpdated'))
+      
       toast.success("All notifications marked as read")
     } catch (err) {
       console.log(err)
