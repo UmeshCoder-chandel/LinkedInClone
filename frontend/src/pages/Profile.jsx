@@ -409,7 +409,7 @@ export const Profile = () => {
           <div className="md:col-span-1 flex flex-col gap-5">
             <Card padding={1}>
               <div className="text-lg font-semibold mb-2">Connections</div>
-              <div className="text-sm text-gray-600">{userData?.friends?.length || 0} Connections</div>
+              <div className="text-sm text-gray-600">{(userData?.friends?.length > 0) ? `${userData.friends.length} Connections` : 'Connections'}</div>
             </Card>
 
             <div className="hidden md:block sticky top-20">
