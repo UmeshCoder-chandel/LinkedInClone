@@ -2,21 +2,30 @@ import React, { useState, useEffect } from "react";
 import assets from "../assets";
 
 const ResumeViewer = ({ resumeUrl, fileName, onClose }) => {
-  const [viewMode, setViewMode] = useState("embed"); // "embed", "download", "preview"
   const [pdfError, setPdfError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [zoom, setZoom] = useState(100);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [viewMode, setViewMode] = useState("embed");
 
   console.log("resumeUrl",{resumeUrl,fileName})
 
   useEffect(() => {
-    // Reset PDF error state when resume URL changes
+    // Reset states when resume URL changes
     setPdfError(false);
+    setIsLoading(true);
+    setZoom(100);
+    setCurrentPage(1);
     
     // Set a timeout to detect PDF loading issues
     if (getFileType(resumeUrl) === 'pdf') {
       const timer = setTimeout(() => {
-        // If PDF hasn't loaded in 5 seconds, show error
-        setPdfError(true);
-      }, 5000);
+        if (isLoading) {
+          setPdfError(true);
+          setIsLoading(false);
+        }
+      }, 10000);
       
       return () => clearTimeout(timer);
     }
@@ -24,7 +33,7 @@ const ResumeViewer = ({ resumeUrl, fileName, onClose }) => {
 
   if (!resumeUrl) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
         <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
           <div className="text-center">
             <div className="text-gray-500 mb-4">
@@ -56,6 +65,37 @@ const ResumeViewer = ({ resumeUrl, fileName, onClose }) => {
 
   const handlePdfError = () => {
     setPdfError(true);
+    setIsLoading(false);
+  };
+
+  const handlePdfLoad = () => {
+    setIsLoading(false);
+    setPdfError(false);
+  };
+
+  const handleZoomIn = () => {
+    setZoom(prev => Math.min(prev + 25, 200));
+  };
+
+  const handleZoomOut = () => {
+    setZoom(prev => Math.max(prev - 25, 50));
+  };
+
+  const handleResetZoom = () => {
+    setZoom(100);
+  };
+
+  const handleDownload = () => {
+    const link = document.createElement('a');
+    link.href = resumeUrl;
+    link.download = fileName || 'resume.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handlePrint = () => {
+    window.open(resumeUrl, '_blank');
   };
 
   return (

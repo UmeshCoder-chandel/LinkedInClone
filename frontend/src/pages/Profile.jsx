@@ -219,214 +219,134 @@ export const Profile = () => {
 
   return (
     <div className="px-5 xl:px-40 py-5 mt-5 flex flex-col gap-5 w-full pt-12 bg-gradient-to-br from-gray-50 to-gray-100">
-      <div className="flex justify-between">
-        {/* left side MAIN */}
-        <div className="w-full md:w-[70%]">
-          {/* Profile Header */}
-          <div>
-            <Card padding={0}>
-              <div className="w-full h-fit">
-                {/* Cover Image */}
-                <div className="h-[220px] w-full relative rounded-t-md overflow-hidden">
+      <div className="w-full">
+        <Card padding={0}>
+          <div className="relative w-full">
+            <div className="h-40 w-full overflow-hidden">
+              <img
+                src={userData?.coverPic || assets.image}
+                alt="cover"
+                className="w-full h-40 object-cover"
+                crossOrigin="anonymous"
+                onError={(e) => { e.target.onerror = null; e.target.src = assets.image }}
+              />
+              {userData?._id === ownData?._id && (
+                <div
+                  className="absolute top-4 right-4 z-20 w-9 h-9 flex justify-center items-center rounded-full bg-white shadow-md cursor-pointer hover:scale-110 transition"
+                  onClick={handleCover}
+                  title="Edit cover photo"
+                >
+                  <EditIcon fontSize="small" />
+                </div>
+              )}
+            </div>
+
+            <div className="px-6 pb-6 grid grid-cols-1 md:grid-cols-3 gap-4 items-end -mt-12">
+              <div className="flex items-end md:items-center md:col-span-1">
+                <div className="relative">
                   <img
-                    src={userData?.coverPic || assets.image}
-                    alt="cover"
-                    className="w-full h-[220px] object-cover"
+                    src={userData?.profilePic || assets.image}
+                    alt="profile"
+                    className="w-28 h-28 rounded-full border-4 border-white shadow-lg object-cover cursor-pointer hover:scale-105 transition"
                     crossOrigin="anonymous"
+                    onClick={handleCircular}
                     onError={(e) => { e.target.onerror = null; e.target.src = assets.image }}
                   />
                   {userData?._id === ownData?._id && (
-                    <div
-                      className="absolute cursor-pointer top-4 right-4 z-20 w-[35px] flex justify-center items-center h-[35px] rounded-full bg-white shadow-md hover:scale-110 transition"
-                      onClick={handleCover}
-                      title="Edit cover photo"
-                    >
-                      <EditIcon fontSize="small" />
+                    <div className="absolute bottom-1 right-1 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-700 transition">
+                      <EditIcon fontSize="small" style={{ color: 'white' }} />
                     </div>
                   )}
-
-                  {/* Profile Image */}
-                  <div
-                    onClick={handleCircular}
-                    className="absolute top-[150px] left-6 z-10"
-                  >
-                    <img
-                      src={userData?.profilePic || assets.image}
-                      alt="profile"
-                      className="w-32 h-32 rounded-full border-4 border-white shadow-lg cursor-pointer hover:scale-105 transition"
-                      crossOrigin="anonymous"
-                      onError={(e) => { e.target.onerror = null; e.target.src = assets.image }}
-                    />
-                    {userData?._id === ownData?._id && (
-                      <div className="absolute bottom-2 right-2 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-700 transition">
-                        <EditIcon fontSize="small" style={{ color: 'white' }} />
-                      </div>
-                    )}
-                  </div>
                 </div>
+              </div>
 
-                {/* Profile Info */}
-                <div className="mt-16 relative px-8 py-4">
-                  {userData?._id === ownData?._id && (
-                    <div
-                      className="absolute cursor-pointer top-3 right-3 z-20 w-[35px] flex justify-center items-center h-[35px] rounded-full bg-white shadow-md hover:scale-110 transition"
-                      onClick={handleInfoModel}
-                      title="Edit profile info"
-                    >
-                      <EditIcon fontSize="small" />
-                    </div>
-                  )}
-
-                  <div className="w-full">
-                    <div className="text-2xl font-bold text-gray-800">
-                      {userData?.name || "No name provided"}
-                    </div>
-                    <div className="text-gray-600 text-sm leading-relaxed">
-                      {userData?.headline || "No headline provided"}
-                    </div>
-                    <div className="text-sm text-gray-500 mt-1">
-                      {userData?.location || "No location provided"}
-                    </div>
+              <div className="md:col-span-2 flex flex-col justify-center">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                  <div>
+                    <div className="text-2xl font-bold text-gray-800">{userData?.name}</div>
+                    <div className="text-gray-600 text-sm">{userData?.headline}</div>
+                    <div className="text-sm text-gray-500 mt-1">{userData?.location}</div>
                     {userData?.github && (
-                      <a
-                        href={userData.github}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-blue-600 text-sm hover:underline block mt-1"
-                      >
-                        {userData.github}
-                      </a>
+                      <a href={userData.github} target="_blank" rel="noreferrer" className="text-blue-600 text-sm hover:underline block mt-1">{userData.github}</a>
                     )}
-                    <div className="text-sm text-blue-800 w-fit cursor-pointer hover:underline mt-1">
-                      {userData?.friends?.length || 0} Connections
-                    </div>
-                    <div className="my-5 flex gap-5 flex-wrap">
-                      <ResumeButton 
-                        resumeUrl={userData?.resume}
-                        fileName={`${userData?.name}'s Resume`}
-                        className="px-4 py-2 rounded-lg bg-blue-800 text-white font-semibold hover:bg-blue-900 transition"
+                  </div>
+
+                  <div className="flex flex-wrap gap-3">
+                    <ResumeButton resumeUrl={userData?.resume} fileName={`${userData?.name}'s Resume`} className="px-3 py-2 rounded-lg bg-blue-800 text-white text-sm">Resume</ResumeButton>
+                    <button onClick={copytoshare} className="px-3 py-2 rounded-lg bg-blue-600 text-white text-sm">Share</button>
+                    {userData?._id === ownData?._id && (
+                      <button onClick={handleLogout} className="px-3 py-2 rounded-lg bg-red-600 text-white text-sm">Logout</button>
+                    )}
+                    {userData?._id === ownData?._id && (
+                      <button onClick={handleJobModal} className="px-3 py-2 rounded-lg bg-green-600 text-white text-sm">Your Hiring</button>
+                    )}
+                    {amIfriend() && (
+                      <button onClick={handleMessageModal} className="px-3 py-2 rounded-lg bg-blue-800 text-white text-sm">Message</button>
+                    )}
+                    {userData?._id !== ownData?._id && (
+                      <button
+                        className={`px-3 py-2 rounded-lg text-white text-sm ${
+                          isSendingRequest ? 'bg-gray-400 cursor-not-allowed' : checkFriendStatus() === 'Disconnect' ? 'bg-red-600' : checkFriendStatus() === 'Request Sent' ? 'bg-gray-500' : 'bg-blue-800'
+                        }`}
+                        onClick={handleSendFriend}
+                        disabled={isSendingRequest || checkFriendStatus() === 'Request Sent'}
                       >
-                        Resume
-                      </ResumeButton>
-                      <div 
-                        onClick={copytoshare} 
-                        className="cursor-pointer px-4 py-2 rounded-lg bg-blue-800 text-white font-semibold hover:bg-blue-900 transition"
-                      >
-                        Share
-                      </div>
-                      {userData?._id === ownData?._id && (
-                        <div 
-                          onClick={handleLogout} 
-                          className="cursor-pointer px-4 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition"
-                        >
-                          LogOut
-                        </div>
-                      )}
-                      {userData?._id === ownData?._id && (
-                        <div
-                          onClick={handleJobModal}
-                          className="cursor-pointer px-4 py-2 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 transition"
-                        >
-                          Your Hiring
-                        </div>
-                      )}
-                      {amIfriend() && (
-                        <div 
-                          className="cursor-pointer px-4 py-2 rounded-lg bg-blue-800 text-white font-semibold hover:bg-blue-900 transition" 
-                          onClick={handleMessageModal}
-                        >
-                          Message
-                        </div>
-                      )}
-                      {userData?._id !== ownData?._id && (
-                        <button 
-                          className={`cursor-pointer px-4 py-2 rounded-lg text-white font-semibold transition ${
-                            isSendingRequest 
-                              ? 'bg-gray-400 cursor-not-allowed' 
-                              : checkFriendStatus() === 'Disconnect' 
-                                ? 'bg-red-600 hover:bg-red-700' 
-                                : checkFriendStatus() === 'Request Sent'
-                                  ? 'bg-gray-500 cursor-not-allowed'
-                                  : 'bg-blue-800 hover:bg-blue-900'
-                          }`}
-                          onClick={handleSendFriend}
-                          disabled={isSendingRequest || checkFriendStatus() === 'Request Sent'}
-                        >
-                          {isSendingRequest ? 'Processing...' : checkFriendStatus()}
-                        </button>
-                      )}
-                    </div>
+                        {isSendingRequest ? 'Processing...' : checkFriendStatus()}
+                      </button>
+                    )}
                   </div>
                 </div>
-              </div>
-            </Card>
-          </div>
 
-          {/* About */}
-          <div className="mt-5">
-            <Card padding={1}>
-              <div className="flex justify-between items-center mb-2">
-                <div className="text-lg font-semibold">About</div>
-                {userData?._id === ownData?._id && (
-                  <div
-                    className="cursor-pointer hover:scale-110 transition"
-                    onClick={handleAboutModel}
-                    title="Edit about"
-                  >
-                    <EditIcon fontSize="small" />
-                  </div>
-                )}
+                <div className="mt-3 text-sm text-gray-700">
+                  {userData?.about || 'No about information provided'}
+                </div>
               </div>
-              <div className="text-gray-700 text-sm leading-relaxed">
-                {userData?.about || "No about information provided"}
-              </div>
-            </Card>
+            </div>
           </div>
+        </Card>
 
-          {/* Skills */}
-          <div className="mt-5">
+        {/* Tab Navigation */}
+        <div className="mt-4">
+          <div className="flex gap-2 overflow-x-auto">
+            {['Overview','Activity','Experience','Projects','Education'].map((tab) => (
+              <button key={tab} className={`px-4 py-2 rounded-md text-sm font-medium ${tab === 'Overview' ? 'bg-white shadow' : 'bg-gray-100'}`}>
+                {tab}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Main content columns */}
+        <div className="mt-5 grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Left column: primary content */}
+          <div className="md:col-span-2 flex flex-col gap-5">
+            {/* Skills Card */}
             <Card padding={1}>
               <div className="flex justify-between items-center mb-2">
                 <h3 className="text-lg font-semibold">Skills</h3>
                 {userData?._id === ownData?._id && (
-                  <div
-                    className="cursor-pointer hover:scale-110 transition"
-                    onClick={handleSkillsModel}
-                    title="Edit skills"
-                  >
-                    <EditIcon fontSize="small" />
-                  </div>
+                  <div className="cursor-pointer hover:scale-110 transition" onClick={handleSkillsModel} title="Edit skills"><EditIcon fontSize="small" /></div>
                 )}
               </div>
               <div className="flex flex-wrap gap-2">
                 {userData?.skills?.length > 0 ? (
                   userData.skills.map((skill, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 bg-gradient-to-r from-gray-200 to-gray-300 rounded-full text-sm shadow-sm hover:shadow-md transition"
-                    >
-                      {skill}
-                    </span>
+                    <span key={index} className="px-3 py-1 bg-gradient-to-r from-gray-200 to-gray-300 rounded-full text-sm shadow-sm hover:shadow-md transition">{skill}</span>
                   ))
                 ) : (
                   <p className="text-gray-500">No skills added yet</p>
                 )}
               </div>
             </Card>
-          </div>
 
-          {/* Activity */}
-          <div className="mt-5">
+            {/* Activity Card */}
             <Card padding={1}>
               <div className="flex justify-between items-center mb-3">
                 <div className="text-lg font-semibold">Activity</div>
               </div>
-              <div className="cursor-pointer px-4 py-2 w-fit rounded-full bg-green-700 text-white font-medium shadow hover:bg-green-800 transition">
-                Post
-              </div>
               <div className="overflow-x-auto mt-3 flex gap-3 overflow-y-hidden w-full">
                 {postData.length > 0 ? (
-                  postData.map((item, index) => (
+                  postData.map((item) => (
                     <Link to={`/profile/${id}/activities/${item?._id}`} key={item?._id} className="cursor-pointer shrink-0 w-[350px]">
                       <PostCard profile={1} item={item} personData={ownData} onPostDelete={(postId) => {
                         setPostData(prev => prev.filter(post => post._id !== postId));
@@ -437,29 +357,14 @@ export const Profile = () => {
                   <p className="text-gray-500">No posts yet</p>
                 )}
               </div>
-              {postData.length > 5 && (
-                <div className="mt-4 text-center justify-center">
-                  <Link to={`/profile/${id}/activities`} className="mt-4 px-4 py-2 hover:bg-gray-600 text rounded-md">
-                    Show More
-                  </Link>
-                </div>
-              )}
             </Card>
-          </div>
 
-          {/* Experience */}
-          <div className="mt-5">
+            {/* Experience Card */}
             <Card padding={1}>
               <div className="flex justify-between items-center mb-2">
                 <h3 className="text-lg font-semibold">Experience</h3>
                 {userData?._id === ownData?._id && (
-                  <div
-                    className="cursor-pointer hover:scale-110 transition"
-                    onClick={handleExpModel}
-                    title="Edit experience"
-                  >
-                    <EditIcon fontSize="small" />
-                  </div>
+                  <div className="cursor-pointer hover:scale-110 transition" onClick={handleExpModel} title="Edit experience"><EditIcon fontSize="small" /></div>
                 )}
               </div>
               {userData?.experience?.length ? (
@@ -467,33 +372,21 @@ export const Profile = () => {
                   <div key={exp._id || i} className="p-3 border-b last:border-b-0">
                     <h4 className="font-medium">{exp.title}</h4>
                     <p className="text-sm text-gray-600">{exp.company}</p>
-                    <p className="text-xs text-gray-500">
-                      {exp.startDate} - {exp.endDate || 'Present'}
-                    </p>
-                    {exp.description && (
-                      <p className="text-sm text-gray-600 mt-1">{exp.description}</p>
-                    )}
+                    <p className="text-xs text-gray-500">{exp.startDate} - {exp.endDate || 'Present'}</p>
+                    {exp.description && <p className="text-sm text-gray-600 mt-1">{exp.description}</p>}
                   </div>
                 ))
               ) : (
                 <p className="text-gray-500 text-sm">No experience details</p>
               )}
             </Card>
-          </div>
 
-          {/* Projects */}
-          <div className="mt-5">
+            {/* Projects Card */}
             <Card padding={1}>
               <div className="flex justify-between items-center mb-2">
                 <h3 className="text-lg font-semibold">Projects</h3>
                 {userData?._id === ownData?._id && (
-                  <div
-                    className="cursor-pointer hover:scale-110 transition"
-                    onClick={handleProjectsModel}
-                    title="Edit projects"
-                  >
-                    <EditIcon fontSize="small" />
-                  </div>
+                  <div className="cursor-pointer hover:scale-110 transition" onClick={handleProjectsModel} title="Edit projects"><EditIcon fontSize="small" /></div>
                 )}
               </div>
               {userData?.projects?.length ? (
@@ -502,14 +395,7 @@ export const Profile = () => {
                     <h4 className="font-medium">{project.title}</h4>
                     <p className="text-sm text-gray-600">{project.description}</p>
                     {project.link && (
-                      <a
-                        href={project.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 text-sm hover:underline"
-                      >
-                        View Project
-                      </a>
+                      <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 text-sm hover:underline">View Project</a>
                     )}
                   </div>
                 ))
@@ -519,98 +405,76 @@ export const Profile = () => {
             </Card>
           </div>
 
-          {/* Education */}
-          <div className="mt-5">
+          {/* Right column: sidebar */}
+          <div className="md:col-span-1 flex flex-col gap-5">
             <Card padding={1}>
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="text-lg font-semibold">Education</h3>
-                {userData?._id === ownData?._id && (
-                  <div
-                    className="cursor-pointer hover:scale-110 transition"
-                    onClick={handleEduModel}
-                    title="Edit education"
-                  >
-                    <EditIcon fontSize="small" />
-                  </div>
-                )}
-              </div>
-              {userData?.education?.length ? (
-                userData.education.map((edu, i) => (
-                  <div key={edu._id || i} className="p-3 border-b last:border-b-0">
-                    <h4 className="font-medium">{edu.school}</h4>
-                    <p className="text-sm text-gray-600">{edu.degree}</p>
-                    <p className="text-xs text-gray-500">
-                      {edu.startDate} - {edu.endDate || 'Present'}
-                    </p>
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-500 text-sm">No education details</p>
-              )}
+              <div className="text-lg font-semibold mb-2">Connections</div>
+              <div className="text-sm text-gray-600">{userData?.friends?.length || 0} Connections</div>
             </Card>
+
+            <div className="hidden md:block sticky top-20">
+              <Advertisement />
+            </div>
           </div>
         </div>
 
-        {/* right side */}
-        <div className="hidden md:flex md:w-[28%]">
-          <div className="sticky top-20">
-            <Advertisement />
-          </div>
-        </div>
+        {/* Modals */}
+        {imageSetModel && (
+          <Modal title={"Upload Image"} closeModel={handleImage}>
+            <ImageModels handleEditButton={handleEditButton} selfData={ownData} isCircular={circularImage} />
+          </Modal>
+        )}
+
+        {infoModel && (
+          <Modal title="Edit Info" closeModel={handleInfoModel}>
+            <EditModel handleEditButton={handleEditButton} selfData={ownData} />
+          </Modal>
+        )}
+
+        {aboutModel && (
+          <Modal title="About" closeModel={handleAboutModel}>
+            <AboutModel handleEditButton={handleEditButton} selfData={ownData} />
+          </Modal>
+        )}
+
+        {skillsModel && (
+          <Modal title="Skills" closeModel={handleSkillsModel}>
+            <SkillsModel handleEditButton={handleEditButton} selfData={ownData} />
+          </Modal>
+        )}
+
+        {expModel && (
+          <Modal title="Experience" closeModel={handleExpModel}>
+            <ExperisModel handleEditButton={handleEditButton} selfData={ownData} />
+          </Modal>
+        )}
+
+        {projectsModel && (
+          <Modal title="Projects" closeModel={handleProjectsModel}>
+            <ProjectsModel handleEditButton={handleEditButton} selfData={ownData} />
+          </Modal>
+        )}
+
+        {eduModel && (
+          <Modal title="Education" closeModel={handleEduModel}>
+            <EducationModel handleEditButton={handleEditButton} selfData={ownData} />
+          </Modal>
+        )}
+
+        {messageModal && (
+          <Modal title='Send Message' closeModel={handleMessageModal}>
+            <MessageModal selfData={ownData} userData={userData} />
+          </Modal>
+        )}
+
+        {jobModal && (
+          <Modal title="Create Job" closeModel={handleJobModal}>
+            <CreateJobModal closeModal={handleJobModal} />
+          </Modal>
+        )}
+
+        <ToastContainer />
       </div>
-
-      {/* Image Modal */}
-      {imageSetModel && (
-        <Modal title={"Upload Image"} closeModel={handleImage}>
-          <ImageModels handleEditButton={handleEditButton} selfData={ownData} isCircular={circularImage} />
-        </Modal>
-      )}
-
-      {/* Info Modals */}
-      {infoModel && (
-        <Modal title="Edit Info" closeModel={handleInfoModel}>
-          <EditModel handleEditButton={handleEditButton} selfData={ownData} />
-        </Modal>
-      )}
-
-      {aboutModel && (
-        <Modal title="About" closeModel={handleAboutModel}>
-          <AboutModel handleEditButton={handleEditButton} selfData={ownData} />
-        </Modal>
-      )}
-      {skillsModel && (
-        <Modal title="Skills" closeModel={handleSkillsModel}>
-          <SkillsModel handleEditButton={handleEditButton} selfData={ownData} />
-        </Modal>
-      )}
-      {expModel && (
-        <Modal title="Experience" closeModel={handleExpModel}>
-          <ExperisModel handleEditButton={handleEditButton} selfData={ownData} />
-        </Modal>
-      )}
-      {projectsModel && (
-        <Modal title="Projects" closeModel={handleProjectsModel}>
-          <ProjectsModel handleEditButton={handleEditButton} selfData={ownData} />
-        </Modal>
-      )}
-      {eduModel && (
-        <Modal title="Education" closeModel={handleEduModel}>
-          <EducationModel handleEditButton={handleEditButton} selfData={ownData} />
-        </Modal>
-      )}
-      {messageModal && (
-        <Modal title='Send Message' closeModel={handleMessageModal}>
-          <MessageModal selfData={ownData} userData={userData} />
-        </Modal>
-      )}
-
-      {jobModal && (
-        <Modal title="Create Job" closeModel={handleJobModal}>
-          <CreateJobModal closeModal={handleJobModal} />
-        </Modal>
-      )}
-
-      <ToastContainer />
     </div>
   );
 };
