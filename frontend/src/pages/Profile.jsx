@@ -241,8 +241,9 @@ export const Profile = () => {
               )}
             </div>
 
-            <div className="px-6 pb-6 grid grid-cols-1 md:grid-cols-3 gap-4 items-end -mt-20">
-              <div className="flex items-end md:items-center md:col-span-1">
+            <div className="px-6 pb-6 grid grid-cols-1 md:grid-cols-3 gap-4 items-start -mt-20">
+              {/* Left: avatar + details stacked */}
+              <div className="md:col-span-1 flex flex-col items-start gap-4">
                 <div className="relative">
                   <img
                     src={userData?.profilePic || assets.image}
@@ -258,53 +259,46 @@ export const Profile = () => {
                     </div>
                   )}
                 </div>
+
+                <div className="pl-1">
+                  <div className="text-2xl font-semibold text-gray-900">{userData?.name}</div>
+                  <div className="text-gray-600 text-sm mt-1">{userData?.headline}</div>
+                  <div className="text-sm text-gray-500 mt-1">{userData?.location}</div>
+                  {userData?.github && (
+                    <a href={userData.github} target="_blank" rel="noreferrer" className="text-blue-600 text-sm hover:underline block mt-1">{userData.github}</a>
+                  )}
+                  <div className="text-sm text-gray-600 mt-2">{(userData?.friends?.length > 0) ? `${userData.friends.length} connections` : ''}</div>
+                  <div className="mt-3 text-sm text-gray-700">{userData?.about || 'No about information provided'}</div>
+                </div>
               </div>
 
-              <div className="md:col-span-2 flex flex-col justify-center">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                  <div>
-                    <div className="text-3xl font-semibold text-gray-900">{userData?.name}</div>
-                    <div className="text-gray-600 text-base mt-1">{userData?.headline}</div>
-                    <div className="text-sm text-gray-500 mt-1">{userData?.location}</div>
-                    {userData?.github && (
-                      <a href={userData.github} target="_blank" rel="noreferrer" className="text-blue-600 text-sm hover:underline block mt-1">{userData.github}</a>
-                    )}
-                    <div className="text-sm text-gray-600 mt-2">
-                      {(userData?.friends?.length > 0) ? `${userData.friends.length} connections` : ''}
+              {/* Right: action buttons */}
+              <div className="md:col-span-2 flex justify-end items-start">
+                <div className="flex items-center gap-2">
+                  {userData?._id !== ownData?._id && (
+                    <button
+                      onClick={handleSendFriend}
+                      disabled={isSendingRequest || checkFriendStatus() === 'Request Sent'}
+                      className={`px-4 py-2 text-sm font-medium rounded-md transition ${isSendingRequest ? 'bg-gray-300 text-gray-700 cursor-not-allowed' : checkFriendStatus() === 'Disconnect' ? 'bg-red-600 text-white' : 'bg-blue-700 text-white'}`}
+                    >
+                      {isSendingRequest ? 'Processing...' : checkFriendStatus()}
+                    </button>
+                  )}
+
+                  {amIfriend() && (
+                    <button onClick={handleMessageModal} className="px-4 py-2 border rounded-md text-sm">Message</button>
+                  )}
+
+                  {userData?._id === ownData?._id && (
+                    <div className="flex gap-2">
+                      <button onClick={handleJobModal} className="px-4 py-2 border rounded-md text-sm">Your Hiring</button>
+                      <button onClick={handleLogout} className="px-4 py-2 border rounded-md text-sm text-red-600">Logout</button>
                     </div>
+                  )}
+
+                  <div className="relative">
+                    <ResumeButton resumeUrl={userData?.resume} fileName={`${userData?.name}'s Resume`} className="px-3 py-2 rounded-md bg-white border text-sm">Resume</ResumeButton>
                   </div>
-
-                  <div className="flex items-center gap-2">
-                    {/* Primary actions similar to LinkedIn */}
-                    {userData?._id !== ownData?._id && (
-                      <button
-                        onClick={handleSendFriend}
-                        disabled={isSendingRequest || checkFriendStatus() === 'Request Sent'}
-                        className={`px-4 py-2 text-sm font-medium rounded-md transition ${isSendingRequest ? 'bg-gray-300 text-gray-700 cursor-not-allowed' : checkFriendStatus() === 'Disconnect' ? 'bg-red-600 text-white' : 'bg-blue-700 text-white'}`}
-                      >
-                        {isSendingRequest ? 'Processing...' : checkFriendStatus()}
-                      </button>
-                    )}
-
-                    {amIfriend() && (
-                      <button onClick={handleMessageModal} className="px-4 py-2 border rounded-md text-sm">Message</button>
-                    )}
-
-                    {userData?._id === ownData?._id && (
-                      <div className="flex gap-2">
-                        <button onClick={handleJobModal} className="px-4 py-2 border rounded-md text-sm">Your Hiring</button>
-                        <button onClick={handleLogout} className="px-4 py-2 border rounded-md text-sm text-red-600">Logout</button>
-                      </div>
-                    )}
-
-                    <div className="relative">
-                      <ResumeButton resumeUrl={userData?.resume} fileName={`${userData?.name}'s Resume`} className="px-3 py-2 rounded-md bg-white border text-sm">Resume</ResumeButton>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-3 text-sm text-gray-700">
-                  {userData?.about || 'No about information provided'}
                 </div>
               </div>
             </div>
