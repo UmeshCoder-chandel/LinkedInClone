@@ -270,11 +270,9 @@ export const Profile = () => {
                   <div className="text-sm text-gray-600 mt-2">{(userData?.friends?.length > 0) ? `${userData.friends.length} connections` : ''}</div>
                   <div className="mt-3 text-sm text-gray-700">{userData?.about || 'No about information provided'}</div>
                 </div>
-              </div>
 
-              {/* Right: action buttons */}
-              <div className="md:col-span-2 flex justify-end items-start">
-                <div className="flex items-center gap-2">
+                {/* Action buttons moved below the profile details for better layout */}
+                <div className="mt-4 flex items-center gap-2">
                   {userData?._id !== ownData?._id && (
                     <button
                       onClick={handleSendFriend}
@@ -300,6 +298,11 @@ export const Profile = () => {
                     <ResumeButton resumeUrl={userData?.resume} fileName={`${userData?.name}'s Resume`} className="px-3 py-2 rounded-md bg-white border text-sm">Resume</ResumeButton>
                   </div>
                 </div>
+              </div>
+
+              {/* Right: placeholder for spacing or future content */}
+              <div className="md:col-span-2 flex justify-end items-start">
+                {/* keep empty to preserve layout; action buttons moved left under avatar */}
               </div>
             </div>
           </div>
