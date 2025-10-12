@@ -283,7 +283,7 @@ export const Profile = () => {
                     </button>
                   )}
 
-                  {amIfriend() && (
+                  {(amIfriend() > 0) && (
                     <button onClick={handleMessageModal} className="px-4 py-2 border rounded-md text-sm">Message</button>
                   )}
 
@@ -295,7 +295,7 @@ export const Profile = () => {
                   )}
 
                   <div className="relative">
-                    <ResumeButton resumeUrl={userData?.resume} fileName={`${userData?.name}'s Resume`} className="px-3 py-2 rounded-md bg-white border text-sm">Resume</ResumeButton>
+                    <ResumeButton resumeUrl={userData?.resume} fileName={`${userData?.name}'s Resume`} className="px-3 py-2 rounded-md bg-blue-600 text-white text-sm">Resume</ResumeButton>
                   </div>
                 </div>
               </div>
@@ -412,7 +412,40 @@ export const Profile = () => {
           <div className="md:col-span-1 flex flex-col gap-5">
             <Card padding={1}>
               <div className="text-lg font-semibold mb-2">Connections</div>
-              <div className="text-sm text-gray-600">{(userData?.friends?.length > 0) ? `${userData.friends.length} Connections` : 'Connections'}</div>
+              <div className="text-sm text-gray-600 mb-3">{(userData?.friends?.length > 0) ? `${userData.friends.length} Connections` : 'Connections'}</div>
+
+              {/* Show up to 5 friend previews */}
+              <div className="flex flex-col gap-3">
+                {userData?.friends && userData.friends.length > 0 ? (
+                  userData.friends.slice(0, 5).map((friend) => {
+                    // friends may be populated objects or just id strings
+                    const friendObj = (typeof friend === 'object' && friend !== null) ? friend : null;
+                    const friendId = friendObj ? (friendObj._id || friendObj.id) : friend;
+                    const friendPic = friendObj ? (friendObj.profilePic || assets.image) : assets.image;
+                    const friendName = friendObj ? (friendObj.name || 'User') : 'User';
+                    const friendHeadline = friendObj ? (friendObj.headline || '') : '';
+
+                    return (
+                      <Link key={friendId || friend} to={`/profile/${friendId}`} className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-md">
+                        <img src={friendPic || assets.image} alt="friend" className="w-10 h-10 rounded-full object-cover border" onError={(e)=>{e.target.onerror=null; e.target.src=assets.image}} />
+                        <div className="flex flex-col">
+                          <div className="text-sm font-medium text-gray-900">{friendName}</div>
+                          <div className="text-xs text-gray-500">{friendHeadline}</div>
+                        </div>
+                      </Link>
+                    )
+                  })
+                ) : (
+                  <div className="text-gray-500 text-sm">No connections yet</div>
+                )}
+              </div>
+
+              {/* Show all button when more than 5 connections */}
+              {userData?.friends && userData.friends.length > 5 && (
+                <div className="mt-3">
+                  <Link to="/mynetwork" className="text-sm text-blue-600 hover:underline">Show all</Link>
+                </div>
+              )}
             </Card>
 
             <div className="hidden md:block sticky top-20">
