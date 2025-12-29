@@ -14,16 +14,22 @@ const MyGoogleLogin = (props) => {
         { token },
         { withCredentials: true }
       );
-      console.log(res);
+      console.log('google login response', res);
 
-      localStorage.setItem('islogin', 'true')
-      localStorage.setItem('userInfo', JSON.stringify(res.data.user))
-      if (props.changeValue) {
-        props.changeValue(true);
+      if (res.status === 200) {
+        localStorage.setItem('islogin', 'true')
+        localStorage.setItem('userInfo', JSON.stringify(res.data.user))
+        // fallback: store token returned in body for dev or when cookies are blocked
+        if (res.data && res.data.token) localStorage.setItem('access_token', res.data.token)
+        if (props.changeValue) {
+          props.changeValue(true);
+        }
+        navigate('/home');
+      } else {
+        console.error('Google login failed', res);
       }
-      navigate('/home');
     } catch (error) {
-      console.error(error);
+      console.error('Google login error', error?.response?.data || error.message || error);
     }
   };
 

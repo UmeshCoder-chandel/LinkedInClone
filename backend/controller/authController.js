@@ -10,10 +10,11 @@ dotenv.config()
 
 const cookieOptions = {
     httpOnly: true,
-    secure: true,
-  sameSite: "None",
-    maxAge:7*24*60*60*1000
-}
+    // Only mark cookie as secure in production (requires HTTPS). In development we use Lax sameSite so cookies work on localhost.
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? "None" : "Lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000
+}    
 
 // Generate OTP
 const generateOTP = () => {
@@ -198,8 +199,10 @@ export const loginGoogle = async (req, res) => {
             await user.save();
         }
         const cookietoken = jwt.sign({ userId: user._id }, process.env.JWT_TOKEN, { expiresIn: "7d" })
+        // Set cookie (will be secure/None in production) — useful for server-authenticated requests
         res.cookie("access_token", cookietoken, cookieOptions)
-        res.status(200).json({ message: "login successful", user })
+        // Also return the token in body to help the frontend proceed in development or if cookie is blocked
+        res.status(200).json({ message: "login successful", user, token: cookietoken })
 
     } catch (error) {
         res.status(400).json({message:"login falied", error:error.message})

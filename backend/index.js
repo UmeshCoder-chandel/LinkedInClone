@@ -20,16 +20,23 @@ const app=express()
 connectDB();
 
 const server = http.createServer(app)
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+
 const io = new Server(server,{
     cors:{
-        origin:"https://linkedinclone-frontend.onrender.com",
-        method:['GET','POST'],
+        origin: (origin, callback) => {
+            // Allow requests with no origin (e.g., mobile clients or curl) and allow FRONTEND_URL and production hosted frontend
+            const allowed = [FRONTEND_URL, "https://linkedinclone-frontend.onrender.com"];
+            if(!origin || allowed.includes(origin)) return callback(null, true);
+            return callback(new Error('Not allowed by CORS'));
+        },
+        methods:['GET','POST'],
         credentials:true
     }
 })
 
 app.use(cors({
-  origin: "https://linkedinclone-frontend.onrender.com",
+  origin: FRONTEND_URL,
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
