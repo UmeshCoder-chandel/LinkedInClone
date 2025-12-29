@@ -20,7 +20,11 @@ const MyGoogleLogin = (props) => {
         localStorage.setItem('islogin', 'true')
         localStorage.setItem('userInfo', JSON.stringify(res.data.user))
         // fallback: store token returned in body for dev or when cookies are blocked
-        if (res.data && res.data.token) localStorage.setItem('access_token', res.data.token)
+        if (res.data && res.data.token) {
+          localStorage.setItem('access_token', res.data.token)
+          // set axios default for future requests
+          axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`
+        }
         if (props.changeValue) {
           props.changeValue(true);
         }

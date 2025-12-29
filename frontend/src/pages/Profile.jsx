@@ -173,7 +173,9 @@ export const Profile = () => {
   const handleLogout = async () => {
     try {
       await axios.post(`https://linkedinclone-backend-i2bq.onrender.com/api/auth/logout`, {}, { withCredentials: true });
+      // Clear local storage and axios auth header so subsequent requests don't include stale token
       localStorage.clear();
+      if (axios.defaults.headers && axios.defaults.headers.common) delete axios.defaults.headers.common['Authorization'];
       toast.success("Logged out successfully");
       window.location.href = '/login';
     } catch (err) {
